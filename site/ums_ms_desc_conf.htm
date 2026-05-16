@@ -1,0 +1,152 @@
+<html>
+<head>
+<title>Mouse Config Descriptor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<table width="100%" border="0" cellspacing="0">
+  <tr> 
+    <td width="50%"> 
+      <table width="90%" border="0" cellspacing="0" cellpadding="5" align="center">
+        <tr> 
+          <td>
+            <h2><font face="Arial, Helvetica, sans-serif" size="-1">Configuration 
+              Descriptor</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">This is the 
+              configuration descriptor of the mouse we are examining. The analyser 
+              is showing the significance of the 9 bytes which comprise the descriptor.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The first two 
+              bytes show the length and descriptor type, as with any descriptor. 
+              This is followed by a word which gives the total number of bytes 
+              contained in the configuration descriptor collection. In this case 
+              the four descriptors included contain a total of 34 bytes.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bNumInterfaces 
+              shows the number of interfaces in this device. Each interface could 
+              represent a different function such as a keyboard function or an 
+              audio transfer function. In this case though, we have a single interface 
+              which we will see acts as a HID mouse function.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bConfigurationValue 
+              has a value of 1. This is the number which the Set Configuration 
+              command must use to select this, the only, configuration.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">iConfiguration 
+              has the value 0 to tell the host that this configuration has no 
+              special string defined to describe it.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bmAttributes 
+              tells the host that the device is bus-powered, and supports the 
+              remote wake-up functionality.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">Finally bMaxPower 
+              tells the host that the device will draw no more that one unit load, 
+              or 100mA in normal operation.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">In our current 
+              mouse descriptor collection, the configuration descriptor is followed 
+              by the (one and only) interface descriptor.</font></p>
+      </td>
+        </tr>
+      </table>
+      <div align="center"></div>
+      </td>
+    <td width="25%"> 
+      <h2><font face="Arial, Helvetica, sans-serif"><img src="ums_g_an_ms_9a.gif" width="334" height="476"></font></h2>
+    </td>
+  </tr>
+  <tr> 
+    <td width="50%">
+<table width="90%" border="0" cellspacing="0" cellpadding="5" align="center">
+        <tr>
+          <td>
+            <p>&nbsp;</p>
+            <h2><font face="Arial, Helvetica, sans-serif" size="-1">Interface 
+              Descriptor</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">This is the 
+              interface descriptor of our mouse. The analyser is showing the significance 
+              of the 9 bytes which comprise the descriptor.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The first two 
+              bytes show the length and descriptor type, as with any descriptor. 
+              </font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bInterfaceNumber, 
+              which is used by requests to reference this interface, is defined 
+              as 0. This value has to be unique within this configuration.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">It defines 
+              bAlternateSetting to be 0. If the interface had an alternative version 
+              then there might be another interface defined with a different bAlternateSetting, 
+              but in this case there is no alternative interface and this one 
+              has the default setting of 0.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bNumEndpoints 
+              shows that this interface has just one endpoint, which we will see 
+              below is used as an interrupt in endpoint for the mouse to send 
+              its reports.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1"> bInterfaceClass 
+              specifies that this interface is a Human Interface Device interface, 
+              a widely used class which includes the mouse and keyboard among 
+              its possible functionalities.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bInterfaceSubClass 
+              and bInterfaceProtocol are only used if the HID device is one which 
+              has to be recognised by the BIOS of the host computer (i.e. before 
+              the USB driver stack has been loaded into memory). The mouse is 
+              usually designed to be accessible by the BIOS.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">Finally iInterface 
+              specifies that there is no string available to describe this interface.</font></p>
+      </td>
+        </tr>
+      </table>
+      
+    </td>
+    <td width="25%"> 
+      <p><img src="ums_g_an_ms_9b.gif" width="334" height="384"></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%"> 
+      <table width="90%" border="0" cellspacing="0" cellpadding="5" align="center">
+        <tr>
+          <td>
+            <p>&nbsp;</p>
+            <h2><font face="Arial, Helvetica, sans-serif" size="-1">HID Descriptor</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The HID descriptor 
+              always follows the interface descriptor when the interface belongs 
+              to the HID class.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">After the usual 
+              first 2 bytes, bcdHID specifies which version of the HID specification 
+              this interface is compliant with.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bCountryCode 
+              specifies that there is no special localisation involved with this 
+              mouse.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The last three 
+              fields specify that there is one further descriptor to fetch associated 
+              with this class; a HID REPORT descriptor, and informs the host to 
+              expect it to be 52 bytes in length.</font></p>
+    </td>
+        </tr>
+      </table>
+      
+    </td>
+    <td width="25%"><img src="ums_g_an_ms_9c.gif" width="334" height="198"></td>
+  </tr>
+  <tr>
+    <td width="50%"> 
+      <table width="90%" border="0" cellspacing="0" cellpadding="5" align="center">
+        <tr>
+          <td>
+            <p>&nbsp;</p>
+            <h2><font face="Arial, Helvetica, sans-serif" size="-1">Endpoint Descriptor</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">Finally, the 
+              endpoint descriptor follows. After the standard first two bytes, 
+              the host learns that this endpoint being defined has address 1 - 
+              IN.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bmAttributes 
+              says that it is to be used as an interrupt endpoint.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">wMaxPacketSize 
+              specifies that packets no longer than 4 bytes will be send from 
+              the endpoint, and bInterval is a request that the interrupt endpoint 
+              should be polled at least as often as once every 10ms.</font></p>
+    </td>
+        </tr>
+      </table>
+      
+    </td>
+    <td width="25%"><img src="ums_g_an_ms_9d.gif" width="334" height="182"></td>
+  </tr>
+</table>
+</body>
+</html>

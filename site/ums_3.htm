@@ -1,0 +1,1473 @@
+<html>
+<head>
+<title>USB Made Simple - Part 3</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" href="ums.css" type="text/css">
+<meta name="description" content="USB data flow. Full and Low speed. Transceivers, speed identification, line states, packets, endpoints. Transfer types: control, bulk, interrupt, isochronous.">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000" background="g_back1.gif">
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr> 
+    <td width="11%"><img src="g_wedge1.gif" width="80" height="10"></td>
+    <td width="5%"><img src="g_wedge2.gif" width="30" height="4"></td>
+    <td width="84%"> 
+      <h1 align="center"><img src="ums_g_heading.gif" width="600" height="180"></h1>
+    </td>
+  </tr>
+  <tr> 
+    <td width="11%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="index.html"><font color="#FFFF00">Index</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_1.htm"><font color="#FFFF00">Part 
+            1</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_2.htm"><font color="#FFFF00">Part 
+            2</font></a></font></td>
+        </tr>
+        <tr> 
+          <td height="21"><font face="Arial, Helvetica, sans-serif"><b><font color="#FFFF00">Part 
+            3 </font></b></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><font color="#FFFF00">Part 
+            4 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_5.htm"><font color="#FFFF00">Part 
+            5</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_6.htm"><font color="#FFFF00">Part 
+            6</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_7.htm"><font color="#FFFF00">Part 
+            7</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><a href="ums_links.htm"><font color="#FFFF00" face="Arial, Helvetica, sans-serif">Links</font></a></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="5%">&nbsp;</td>
+    <td width="84%"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr>
+          <td width="21%"> <font face="Arial, Helvetica, sans-serif"><a href="ums_2.htm"><b>Back</b></a></font></td>
+          <td width="56%"> 
+            <h2 align="center"><font face="Arial, Helvetica, sans-serif">Part 
+              3 - Data Flow</font></h2>
+          </td>
+          <td width="23%">
+            <div align="right"> <font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><b>Forward</b></a></font></div>
+          </td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="12">
+        <tr> 
+          <td colspan="3" height="15"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="15"><font face="Arial, Helvetica, sans-serif"><i>The 
+            following discussion on data flow covers full and low speed. High 
+            speed signalling will be covered in a later part.</i></font></td>
+        </tr>
+        <tr> 
+          <td width="41%" height="282" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">USB is a Bus</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">Picture a setup of plugged-in 
+              hubs and devices such as that on the right. What we need to remember 
+              is that, at any point in time, only the host OR one device can be 
+              transmitting at a time.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">When the host is transmitting 
+              a packet of data, it is sent to every device connected to an enabled 
+              port. It travels downwards via each hub in the chain which resynchronises 
+              the data transitions as it relays it. Only one device, the addressed 
+              one, actually accepts the data. (The others all receive it but the 
+              address is wrong for them.)</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">One device at a time 
+              is able to transmit to the host, in response to a direct request 
+              from the host. Each hub repeats any data it receives from a lower 
+              device in an upward only direction.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Downstream direction 
+              ports are only enabled once the device connected to them is addressed, 
+              except that one other port at a time can reset a device to address 
+              0 and then set its address to a unique value.</font></p>
+          </td>
+          <td width="4%" height="282">&nbsp;</td>
+          <td width="55%" height="282"><img src="ums_g_pyra.gif" width="320" height="522"></td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="282" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Transceivers</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">At each end of the data 
+              link between host and device is a transceiver circuit. The transceivers 
+              are similar, differing mainly in the associated resistors.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">A typical upstream end 
+              transceiver is shown to the right with high speed components omitted 
+              for clarity. By upstream, we mean the end nearer to the host. The 
+              upstream end has two 15K pull-down resistors.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Each line can be driven 
+              low individually, or a differential data signal can be applied. 
+              The maximum 'high' level is 3.3V.</font></p>
+            <p>&nbsp;</p>
+            <hr>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">The equivalent downstream 
+              end transceiver, as found in a device, is shown to the right. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">When receiving, individual 
+              receivers on each line are able to detect single ended signals, 
+              so that the so-called Single Ended Zero (SE0) condition, where both 
+              lines are low, can be detected. There is also a differential receiver 
+              for reliable reception of data.</font></p>
+            <p>&nbsp;</p>
+            <table width="90%" border="1" cellspacing="0" cellpadding="5" bordercolor="#00FF00">
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif">Not shown in these 
+                  simplified drawings is the rise and fall time control on the 
+                  differential transmitters. Low speed devices need longer rise 
+                  and fall times, so a full speed / low speed hub must be able 
+                  to switch between these rise and fall times.</font></td>
+              </tr>
+            </table>
+            <p>&nbsp;</p>
+          </td>
+          <td width="4%" height="282">&nbsp;</td>
+          <td width="55%" height="282"> 
+            <p align="center"><img src="ums_j_upst_xcvr.jpg" width="320" height="415"></p>
+            <h5 align="center"><font face="Arial, Helvetica, sans-serif">Upstream 
+              End Transceiver</font></h5>
+            <h5 align="center"><img src="ums_j_dnst_xcvr.jpg" width="320" height="418"></h5>
+            <h5 align="center"><font face="Arial, Helvetica, sans-serif">Downstream 
+              End Transceiver (Full Speed)</font></h5>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="115" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Speed Identification</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">At the device end of 
+              the link a 1.5 kohm resistor pulls one of the lines up to a 3.3V 
+              supply derived from VBUS. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">This is on D- for a low 
+              speed device, and on D+ for a full speed device.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"> (A high speed device 
+              will initially present itself as a full speed device with the pull-up 
+              resistor on D+.) </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The host can determine 
+              the required speed by observing which line is pulled high.</font></p>
+          </td>
+          <td width="4%" height="115">&nbsp;</td>
+          <td width="55%" height="115"> 
+            <p align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_j_speed_r.jpg" width="320" height="281"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="99" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Line States</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">Given that there are 
+              just 2 data lines to use, it is surprising just how many different 
+              conditions are signaled using them:</font></p>
+            <h4><font face="Arial, Helvetica, sans-serif">Detached</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When no device is plugged 
+              in, the host will see both data lines low, as its 15 kohm resistors 
+              are pulling each data line low.</font></p>
+          </td>
+          <td width="4%" height="99">&nbsp;</td>
+          <td width="55%" height="99"> 
+            <div align="center"><img src="ums_g_detached.gif" width="320" height="102"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="334" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Attached</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When the device is plugged 
+              in to the host, the host will see either D+ or D- go to a '1' level, 
+              and will know that a device has been plugged in.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The '1' level will be 
+              on D- for a low speed device, and D+ for a full (or high) speed 
+              device.</font></p>
+            <h4><font face="Arial, Helvetica, sans-serif">Idle</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">The state of the data 
+              lines when the pulled up line is high, and the other line is low, 
+              is called the idle state. This is the state of the lines before 
+              and after a packet is sent.</font></p>
+          </td>
+          <td width="4%" height="334">&nbsp;</td>
+          <td width="55%" height="334"> 
+            <div align="center"><img src="ums_g_attached.gif" width="320" height="142"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="309" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">J, K and SEO States</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">To make it easier to 
+              talk about the states of the data lines, some special terminology 
+              is used. The 'J State' is the same polarity as the idle state (the 
+              line with the pull-up resistor is high, and the other line is low), 
+              but is being driven to that state by either host or device.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The K state is just the 
+              opposite polarity to the J state.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The Single Ended Zero 
+              (SE0) is when both lines are being pulled low.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><i>The J and K terms 
+              are used because for Full Speed and Low Speed links they are actually 
+              of opposite polarity.</i></font></p>
+          </td>
+          <td width="4%" height="309">&nbsp;</td>
+          <td width="55%" height="309"> 
+            <table width="90%" border="1" cellspacing="0" bordercolor="#0000FF" align="center">
+              <tr bgcolor="#0000FF"> 
+                <td width="58%"> 
+                  <div align="center"><font color="#FFFFFF" face="Arial, Helvetica, sans-serif" size="-2">Bus 
+                    State </font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="center"><font color="#FFFFFF" face="Arial, Helvetica, sans-serif" size="-2">Levels</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Differential 
+                    '1' </font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">D+ 
+                    high, D- low</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Differential 
+                    '0' </font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">D- 
+                    high, D+ low</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Single 
+                    Ended Zero (SE0)</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">D+ 
+                    and D- low</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Single 
+                    Ended One (SE1)</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">D+ 
+                    and D- high</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%" height="40"> 
+                  <div align="left"> <font face="Arial, Helvetica, sans-serif" size="-2"><i>Data 
+                    J State:</i><br>
+                    Low-speed<br>
+                    Full-speed </font></div>
+                </td>
+                <td width="42%" height="40"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">&nbsp;<br>
+                    Differential '0' <br>
+                    Differential '1' </font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%" height="40"> 
+                  <div align="left"> <font face="Arial, Helvetica, sans-serif" size="-2"><i>Data 
+                    K State:</i><br>
+                    Low-speed<br>
+                    Full-speed </font></div>
+                </td>
+                <td width="42%" height="40"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">&nbsp;<br>
+                    Differential '1' <br>
+                    Differential '0' </font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%" height="45"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2"><i>Idle 
+                    State:</i><br>
+                    Low-speed<br>
+                    Full-speed </font></div>
+                </td>
+                <td width="42%" height="45"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2"><br>
+                    D- high, D+- low<br>
+                    D+ high, D- low</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Resume 
+                    State</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Data 
+                    K state</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Start 
+                    of Packet (SOP)</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Data 
+                    lines switch from idle to K state</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">End 
+                    of Packet (EOP)</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">SE0 
+                    for 2 bit times followed by J state for 1 bit time</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Disconnect</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">SE0 
+                    for &gt;= 2us</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="58%"><font face="Arial, Helvetica, sans-serif" size="-2">Connect</font></td>
+                <td width="42%"><font face="Arial, Helvetica, sans-serif" size="-2">Idle 
+                  for 2.5us</font></td>
+              </tr>
+              <tr> 
+                <td width="58%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">Reset</font></div>
+                </td>
+                <td width="42%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif" size="-2">SE0 
+                    for &gt;= 2.5 us</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <h5 align="center"><font face="Arial, Helvetica, sans-serif"><b>Bus 
+              States</b></font></h5>
+            <p align="center"><font face="Arial, Helvetica, sans-serif" size="-2">This 
+              table has been simplified from the original in the USB specification. 
+              Please read the original table for complete information.</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="90" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Single Ended One (SE1)</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">This is the <b>illegal</b> 
+              condition where both lines are high. It should never occur on a 
+              properly functioning link.</font></p>
+          </td>
+          <td width="4%" height="90">&nbsp;</td>
+          <td width="55%" height="90"><img src="ums_g_se1.gif" width="320" height="80"></td>
+        </tr>
+        <tr> 
+          <td width="41%" height="342" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Reset</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When the host wants to 
+              start communicating with a device it will start by applying a 'Reset' 
+              condition which sets the device to its default unconfigured state.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The Reset condition involves 
+              the host pulling down both data lines to low levels (SE0) for at 
+              least 10 ms. The device may recognise the reset condition after 
+              2.5 us.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">This 'Reset' should not 
+              be confused with a micro-controller power-on type reset. It is a 
+              USB protocol reset to ensure that the device USB signaling starts 
+              from a known state.</font></p>
+          </td>
+          <td width="4%" height="342">&nbsp;</td>
+          <td width="55%" height="342"><img src="ums_g_reset.gif" width="320" height="144"></td>
+        </tr>
+        <tr> 
+          <td width="41%" height="64" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">EOP signal</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">The End of Packet (EOP) 
+              is an SE0 state for 2 bit times, followed by a J state for 1 bit 
+              time.</font></p>
+          </td>
+          <td width="4%" height="64">&nbsp;</td>
+          <td width="55%" height="64"><img src="ums_g_eop.gif" width="320" height="148"></td>
+        </tr>
+        <tr> 
+          <td width="41%" height="64" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Suspend</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">One of the features of 
+              USB which is an essential part of today's emphasis of 'green' products 
+              is its ability to power down an unused device. It does this by suspending 
+              the device, which is achieved by not sending anything to the device 
+              for 3 ms.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Normally a SOF packet 
+              (at full speed) or a Keep Alive signal (at low speed) is sent by 
+              the host every 1 ms, and this is what keeps the device awake.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">A suspended device may 
+              draw no more than 0.5 mA from Vbus.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">A suspended device must 
+              recognise the resume signal, and also the reset signal.</font></p>
+          </td>
+          <td width="4%" height="64">&nbsp;</td>
+          <td width="55%" height="64"> 
+            <p><img src="ums_g_suspended.gif" width="320" height="140"></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <table width="90%" border="1" cellspacing="0" bordercolor="#00FF00" cellpadding="2" align="center">
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif">If a device is configured 
+                  for high power (up to 500 mA), and has its remote wakeup feature 
+                  enabled, it is allowed to draw up to 2.5mA during suspend.</font></td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="64" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Resume</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When the host wants to 
+              wake the device up after a suspend, it does so by reversing the 
+              polarity of the signal on the data lines for at least 20ms. The 
+              signal is completed with a low speed end of packet signal.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">It is also possible for 
+              a device with its remote wakeup feature set, to initiate a resume 
+              itself. It must have been in the idle state for at least 5ms, and 
+              must apply the wakeup K condition for between 1 and 15 ms. The host 
+              takes over the driving of the resume signal within 1 ms.</font></p>
+          </td>
+          <td width="4%" height="64">&nbsp;</td>
+          <td width="55%" height="64"> 
+            <div align="center"><img src="ums_g_resume.gif" width="320" height="200"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="132" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Keep Alive Signal</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">This is represented by 
+              a Low speed EOP. It is sent at least once every millisecond on a 
+              low speed link, in order to keep the device from suspending.</font></p>
+          </td>
+          <td width="4%" height="132">&nbsp;</td>
+          <td width="55%" height="132"> 
+            <div align="center"><img src="ums_g_keepalive.gif" width="320" height="158"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="115" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Packets</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">The packet could be thought 
+              of as the smallest element of data transmission. Each packet conveys 
+              an integral number of bytes at the current transmission rate. Before 
+              and after the packet, the bus is in the idle state.</font></p>
+          </td>
+          <td width="4%" height="115">&nbsp;</td>
+          <td width="55%" height="115">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="41%" height="448" bgcolor="#FFFFCC"> 
+            <p><font face="Arial, Helvetica, sans-serif">You need not be concerned 
+              with the detail of syncs, bit stuffing, and End Of Packet conditions, 
+              unless you are designing at the silicon level, as the Serial Interface 
+              Engine (SIE) will deal with the details for you. You should just 
+              be aware that the SIE can recognise the start and end of a packet, 
+              and that the packet contains a whole number of bytes.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">In spite of this packets 
+              often expect fields of data to cross byte boundaries. The important 
+              rule to remember is that all usb fields are transmitted <b>least 
+              significant bit first</b>. So if, for example, a field is defined 
+              by 2 successive bytes, the first byte will be the least significant, 
+              and the second byte transmitted will be the most significant.</font></p>
+          </td>
+          <td width="4%" height="448">&nbsp;</td>
+          <td width="55%" height="448"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#00FF00" align="center">
+              <tr> 
+                <td height="150"> 
+                  <h4><font face="Arial, Helvetica, sans-serif" size="-1">Serial 
+                    Interface Engine (SIE)</font></h4>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">The complexities 
+                    and speed of the USB protocol are such that it is not practical 
+                    to expect a general purpose micro-controller to be able to 
+                    implement the protocol using an instruction-driven basis. 
+                    Dedicated hardware is required to deal with the time-critical 
+                    portions of the specification, and the circuitry grouping 
+                    which performs this function is referred to as the Serial 
+                    Interface Engine (SIE).</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#00FF00" align="center">
+              <tr> 
+                <td height="150"> 
+                  <h4><font face="Arial, Helvetica, sans-serif" size="-1">Data 
+                    Fields are Transmitted Least Significant Bit First</font></h4>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">The first 
+                    time when you need to know this is when you are defining 'descriptors' 
+                    in your firmware code. Many of these values are word sized 
+                    and you need to add the bytes in the <i>low byte, high byte</i> 
+                    order.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="220" bgcolor="#FFFFCC"><font face="Arial, Helvetica, sans-serif">A 
+            packet starts with a sync pattern to allow the receiver bit clock 
+            to synchronise with the data. It is followed, by the data bytes of 
+            the packet, and concluded with an End of Packet (EOP) signal. The 
+            data is actually NRZI encoded, and in order to ensure sufficiently 
+            frequent transitions, a zero is inserted after 6 successive 1's (this 
+            is known as bit stuffing).</font></td>
+          <td width="4%" height="220">&nbsp;</td>
+          <td width="55%" height="220"> 
+            <table width="92%" border="0" cellspacing="0" align="center">
+              <tr> 
+                <td width="15%"><font face="Arial, Helvetica, sans-serif">Idle</font></td>
+                <td width="73%"> 
+                  <table width="100%" border="1" cellspacing="0" bordercolor="#000000">
+                    <tr> 
+                      <td> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">SYNC</font></div>
+                      </td>
+                      <td> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">DATA 
+                          BYTES</font></div>
+                      </td>
+                      <td> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td width="15%"> 
+                  <div align="right"><font face="Arial, Helvetica, sans-serif">Idle</font></div>
+                </td>
+              </tr>
+            </table>
+            <p align="center"><font face="Arial, Helvetica, sans-serif">A Single 
+              Packet</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="640" bgcolor="#FFFFCC"> 
+            <table width="100%" border="1" cellspacing="0" bordercolor="#00FF00" cellpadding="2">
+              <tr> 
+                <td> 
+                  <p><font face="Arial, Helvetica, sans-serif"><i>Before we continue, 
+                    some definitions...</i></font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Endpoints</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">Each USB device 
+                    has a number of endpoints. Each endpoint is a source or sink 
+                    of data. A device can have up to 16 OUT and 16 IN endpoints.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">OUT always means 
+                    from host to device.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">IN always means 
+                    from device to host.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Endpoint 0 is a 
+                    special case which is a combination of endpoint 0 OUT and 
+                    endpoint 0 IN, and is used for controlling the device.</font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Pipe</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">A logical data 
+                    connection between the host and a particular endpoint, in 
+                    which we ignore the lower level mechanisms for actually achieving 
+                    the data transfers.</font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Transactions</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">Simple transfers 
+                    of data called 'Transactions' are built up using packets. 
+                    </font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td width="4%" height="640">&nbsp;</td>
+          <td width="55%" height="640">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="220" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Packet Formats</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">The first byte in every 
+              packet is a Packet Identifier (PID) byte. This byte needs to be 
+              recognised quickly by the SIE and so is not included in any CRC 
+              checks. It therefore has its own validity check. The PID itself 
+              is 4 bits long, and the 4 bits are repeated in an complemented form.</font></p>
+          </td>
+          <td width="4%" height="220">&nbsp;</td>
+          <td width="55%" height="220"> 
+            <table width="80%" border="2" cellspacing="0" cellpadding="2" bordercolor="#FFFFFF" align="center">
+              <tr> 
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">lsb</font></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">msb</font></td>
+              </tr>
+              <tr bgcolor="#66FFFF"> 
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">PID0</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">PID1</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">PID2</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">PID3</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">\PID0</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">\PID1</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">\PID2</font></td>
+                <td><font size="-1" face="Arial, Helvetica, sans-serif">\PID3</font></td>
+              </tr>
+            </table>
+            <p align="center"><font face="Arial, Helvetica, sans-serif">The PID 
+              is shown here in the order of transmission; lsb first.</font></p>
+            <table width="95%" border="1" cellspacing="0" bordercolor="#00FF00" cellpadding="2" align="center">
+              <tr> 
+                <td height="120"> 
+                  <h5><font face="Arial, Helvetica, sans-serif" size="-1">Cyclic 
+                    Redundancy Code (CRC)</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">A CRC 
+                    is a value calculated from a number of data bytes to form 
+                    a unique value which is transmitted along with the data bytes, 
+                    and then used to validate the correct reception of the data.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">USB uses 
+                    two different CRCs, one 5 bits long (CRC5) and one 16 bits 
+                    long (CRC16).</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">See the 
+                    USB specification for details of the algorithms used.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="380" bgcolor="#FFFFCC"> 
+            <p><font face="Arial, Helvetica, sans-serif">There are 17 different 
+              PID values defined. This includes one reserved value, and one value 
+              which has been used twice with different meanings for two different 
+              situations.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><i>Notice that the first 
+              2 bits of a token which are transmitted, determine which of the 
+              4 groups it falls into. This is why SOF is officially considered 
+              to be a token PID. </i></font></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+          </td>
+          <td width="4%" height="380">&nbsp;</td>
+          <td width="55%" height="380"> 
+            <table width="80%" border="1" cellspacing="0" cellpadding="2" bordercolor="#0000FF" align="center">
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID 
+                  Type</font></b></font></td>
+                <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID 
+                  Name</font></b></font></td>
+                <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID&lt;3:0&gt;*</font></b></font></td>
+              </tr>
+              <tr> 
+                <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Token</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">OUT</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0001b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">IN</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1001b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">SOF</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0101b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">SETUP</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1101b</font></td>
+              </tr>
+              <tr> 
+                <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Data</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">DATA0</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0011b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">DATA1</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1011b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">DATA2</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0111b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">MDATA</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1111b</font></td>
+              </tr>
+              <tr> 
+                <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Handshake</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">ACK</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0010b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">NAK</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1010b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">STALL</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1110b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">NYET</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0110b</font></td>
+              </tr>
+              <tr> 
+                <td rowspan="5"><font face="Arial, Helvetica, sans-serif" size="-1">Special</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">PRE</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1100b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">ERR</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1100b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">SPLIT</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">1000b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">PING</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0100b</font></td>
+              </tr>
+              <tr> 
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">Reserved</font></td>
+                <td><font face="Arial, Helvetica, sans-serif" size="-1">0000b</font></td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p align="center"><font face="Arial, Helvetica, sans-serif">* Bits 
+              are transmitted lsb first</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="43" bgcolor="#FFFFCC"><font face="Arial, Helvetica, sans-serif">There 
+            are four different packet formats based on which PID the packet starts 
+            with.</font></td>
+          <td width="4%" height="43">&nbsp;</td>
+          <td width="55%" height="43">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="41%" height="216" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif">Token Packet</font></h5>
+            <table width="95%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">ADDR</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">ENDP</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC5</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">7 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">4 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">5 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <p><font face="Arial, Helvetica, sans-serif">Used for SETUP, OUT and 
+              IN packets. They are always the first packet in a transaction, identifying 
+              the targeted endpoint, and the purpose of the transaction.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The SOF packet is also 
+              defined as a Token packet, but has a slightly different format and 
+              purpose, which is described below.</font></p>
+          </td>
+          <td width="4%" height="216">&nbsp;</td>
+          <td width="55%" height="216"> 
+            <p><font face="Arial, Helvetica, sans-serif"><b>The token packet contains 
+              two addressing elements:</b></font></p>
+            <h5><font face="Arial, Helvetica, sans-serif">Address (7 bits)</font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">This device address can 
+              address up to 127 devices. Address 0 is reserved for a device which 
+              has not yet had its address set.</font></p>
+            <h5><font face="Arial, Helvetica, sans-serif">Endpoint number (4 bits) 
+              </font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">There can be up to 16 
+              possible endpoints in a device in each direction. The direction 
+              is implicit in the PID. OUT and SETUP PIDs will refer to the OUT 
+              endpoint, and an IN PID will refer to the IN endpoint.</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="237" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif">Data Packet</font></h5>
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">DATA</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC16</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">(0-1024)<br>
+                    x 8 bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">16 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"> 
+              <p>&nbsp;</p>
+            </div>
+            <p><font face="Arial, Helvetica, sans-serif">Used for DATA0, DATA1, 
+              DATA2 and MDATA packets. If a transaction has a data stage this 
+              is the packet format used.</font></p>
+          </td>
+          <td width="4%" height="237">&nbsp;</td>
+          <td width="55%" height="237"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td> 
+                  <p><font face="Arial, Helvetica, sans-serif"><b>DATA0 and DATA1 
+                    PIDs</b> are used in Low and Full speed links as part of an 
+                    error-checking system. When used, all data packets on a particular 
+                    endpoint use an alternating DATA0 / DATA1 so that the endpoint 
+                    knows if a received packet is the one it is expecting. If 
+                    it is not it will still acknowledge (ACK) the packet as it 
+                    is correctly received, but will then discard the data, assuming 
+                    that it has been re-sent because the host missed seeing the 
+                    ACK the first time it sent the data packet.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">DATA2 and MDATA 
+                    are only used for high speed links.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="97" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif">Handshake Packet</font></h5>
+            <table width="50%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits </font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">Used for ACK, NAK, STALL 
+              and NYET packets. This is the packet format used in the status stage 
+              of a transaction, when required.</font></p>
+          </td>
+          <td width="4%" height="97">&nbsp;</td>
+          <td width="55%" height="97"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td height="275"> 
+                  <h5><font face="Arial, Helvetica, sans-serif">ACK</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Receiver acknowledges 
+                    receiving error free packet.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">NAK</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Receiving device 
+                    cannot accept data or transmitting device cannot send data.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">STALL</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Endpoint is halted, 
+                    or control pipe request is not supported.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">NYET</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">No response yet 
+                    from receiver (high speed only)</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="269" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif">SOF Packet</font></h5>
+            <table width="91%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Frame 
+                    No.</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC5</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">11 
+                    bits</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">5 
+                    bits</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">The Start of Frame packet 
+              is sent every 1 ms on full speed links. The frame is used as a time 
+              frame in which to schedule the data transfers which are required. 
+              For example, an isochronous endpoint will be assigned one transfer 
+              per frame.</font></p>
+          </td>
+          <td width="4%" height="269">&nbsp;</td>
+          <td width="55%" height="269"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td> 
+                  <h5><font face="Arial, Helvetica, sans-serif">Frames</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">On a low speed 
+                    link, to preserve bandwidth, a Keep Alive signal is sent every 
+                    millisecond, instead of a Start of Frame packet. In fact Keep 
+                    Alives may be sent by a hub on a low speed link whenever the 
+                    hub sees a full speed token packet.</font></p>
+                  <p align="left"><font face="Arial, Helvetica, sans-serif">At 
+                    high speed the 1 ms frame is divided into 8 microframes of 
+                    125 us. A SOF is sent at the start of each of these 8 microframes, 
+                    each having the same frame number, which then increments every 
+                    1 ms frame.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="300" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Transactions</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">A successful transaction 
+              is a sequence of three packets which performs a simple but secure 
+              transfer of data.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">For IN and OUT transactions 
+              used for isochronous transfers, there are only 2 packets; the handshake 
+              packet on the end is omitted. This is because error-checking is 
+              not required.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">There are three types 
+              of transaction. In each of the illustrations below, the packets 
+              from the host are shaded, and the packets from the device are not.</font></p>
+          </td>
+          <td colspan="2" height="300"> 
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_key.gif" width="320" height="150" align="bottom"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" bgcolor="#FFFFCC" height="80"> 
+            <h5><font face="Arial, Helvetica, sans-serif">OUT Transaction</font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">A successful OUT transaction 
+              comprises two or three sequential packets. If it were being used 
+              in an <i>Isochronous Transfer </i>there would not be a handshake 
+              packet from the device.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">On a low or full speed 
+              link, the PID shown as DATAx will be either a DATA0 or a DATA1. 
+              An alternating DATA0/DATA1 is used as a part of the error control 
+              protocol to (or from) a particular endpoint.</font></p>
+          </td>
+          <td colspan="2" height="151"> 
+            <div align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_out.gif" width="320" height="150"></font></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" bgcolor="#FFFFCC" height="80"> 
+            <h5><font face="Arial, Helvetica, sans-serif">IN Transaction</font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">A successful IN transaction 
+              comprises two or three sequential packets. If it were being used 
+              in an <i>Isochronous Transfer </i>there would not be a handshake 
+              packet from the host.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Here again, the DATAx 
+              is either a DATA0 or a DATA1.</font></p>
+          </td>
+          <td colspan="2" height="151"> 
+            <p align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_in.gif" height="150" width="320"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" bgcolor="#FFFFCC" height="126"> 
+            <h5><font face="Arial, Helvetica, sans-serif">SETUP Transaction</font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">A successful SETUP transaction 
+              comprises three sequential packets. This is similar to an OUT transaction, 
+              but the data payload is exactly 8 bytes long, and the SETUP PID 
+              in the token packet informs the device that this is the first transaction 
+              in a <i>Control Transfer</i> (see below).</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">As will be seen below, 
+              the SETUP transaction always uses a DATA0 to start the data packet.</font></p>
+          </td>
+          <td colspan="2" height="151"> 
+            <div align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_setup.gif" width="320" height="150"></font></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Data Flow Types</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">There are four different 
+              ways to transfer data on a USB bus. Each has its own purposes and 
+              characteristics. Each one is built up using one or more transaction 
+              type. </font></p>
+          </td>
+          <td width="4%">&nbsp;</td>
+          <td width="55%"> 
+            <table width="100%" border="1" cellspacing="0" cellpadding="2" bordercolor="#000000">
+              <tr> 
+                <td width="42%"><font face="Arial, Helvetica, sans-serif"><b><font size="-1">Data 
+                  Flow Type</font></b></font></td>
+                <td width="58%"><font face="Arial, Helvetica, sans-serif"><b><font size="-1">Description</font></b></font></td>
+              </tr>
+              <tr> 
+                <td width="42%" height="54"><font face="Arial, Helvetica, sans-serif">Control 
+                  Transfer</font></td>
+                <td width="58%" height="54"><font face="Arial, Helvetica, sans-serif">Mandatory 
+                  using Endpoint 0 OUT and Endpoint 0 IN.</font></td>
+              </tr>
+              <tr> 
+                <td width="42%"><font face="Arial, Helvetica, sans-serif">Bulk 
+                  Transfer</font></td>
+                <td width="58%"><font face="Arial, Helvetica, sans-serif">Error-free 
+                  high volume throughput when bandwidth available.</font></td>
+              </tr>
+              <tr> 
+                <td width="42%" height="35"><font face="Arial, Helvetica, sans-serif">Interrupt 
+                  Transfer</font></td>
+                <td width="58%" height="35"> 
+                  <p><font face="Arial, Helvetica, sans-serif">Regular Opportunity 
+                    for status updates, etc.<br>
+                    Error-free <br>
+                    Low throughput</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="42%"><font face="Arial, Helvetica, sans-serif">Isochronous 
+                  Transfer</font></td>
+                <td width="58%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">Guaranteed fixed 
+                    bandwidth.<br>
+                    Not error-checked.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="556" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Bulk Transfers</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">Bulk transfers are designed 
+              to transfer large amounts of data with error-free delivery, but 
+              with no guarantee of bandwidth. The host will schedule bulk transfers 
+              after the other transfer types have been allocated.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">If an OUT endpoint is 
+              defined as using Bulk transfers, then the host will transfer data 
+              to it using OUT transactions.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">If an IN endpoint is 
+              defined as using Bulk transfers, then the host will transfer data 
+              from it using IN transactions.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The max packet size is 
+              8, 16, 32 or 64 at full Speed and 512 for high speed. Bulk transfers 
+              are not allowed at low speed.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Use Bulk transfers when 
+              you have a lot of data to shift, as fast as possible, but where 
+              you would not have a large problem if there is a delay caused by 
+              insufficient bandwidth.</font></p>
+          </td>
+          <td width="4%" height="556">&nbsp;</td>
+          <td width="55%" height="556" bgcolor="#FFFFFF"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Example Bulk Transfer</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_bulk.gif" width="320" height="150"></font></p>
+            <h3>&nbsp;</h3>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="463" bgcolor="#FFFFCC"> 
+            <table width="100%" border="1" cellspacing="0" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">The diagrams 
+                    to the right illustrate the possible flow of events in the 
+                    face of errors.</font></p>
+                  <p></p>
+                  <h5><font face="Arial, Helvetica, sans-serif" size="-1">Error 
+                    Control - IN</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">If the 
+                    IN token packet is not recognised, the device will not respond 
+                    at all. Otherwise, if it has data to send it will send it 
+                    in a DATA0 or DATA1 packet, If it is not ready to send data 
+                    it will send a NAK packet. If the endpoint is currently 'halted' 
+                    then it will respond with a STALL packet.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1"> In the 
+                    case of DATA0/1 being sent, the host will acknowledge with 
+                    an ACK, unless the data is not validly received, in which 
+                    case it does not send an ACK. (Note: the host never sends 
+                    NAK!)</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif" size="-1">Error 
+                    Control - OUT</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">If the 
+                    OUT token packet is not recognised, the device will not respond 
+                    at all. It will then ignore the DATAx packet because it does 
+                    not know that it has been addressed.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">If the 
+                    OUT token is recognised but the DATAx packet is not recognised, 
+                    then the device will not respond.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">If the 
+                    data is received but the device can't accept it at this time, 
+                    it will send a NAK, and if the endpoint is currently halted, 
+                    it will send a STALL.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td width="4%" height="463">&nbsp;</td>
+          <td width="55%" height="463" bgcolor="#FFFFFF"> 
+            <h3><font face="Arial, Helvetica, sans-serif">BULK Transfer Error 
+              Control Flow</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_int_in.gif" width="320" height="230"></font></p>
+            <p>&nbsp;</p>
+            <font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_bulk_out.gif" width="320" height="270"></font></td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="11"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="622" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Interrupt Transfers</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">Interrupt transfers have 
+              nothing to do with interrupts. The name is chosen because they are 
+              used for the sort of purpose where an interrupt would have been 
+              used in earlier connection types.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Interrupt transfers are 
+              regularly scheduled IN or OUT transactions, although the IN direction 
+              is the more common usage.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Typically the host will 
+              only fetch one packet, at an interval specified in the <i>endpoint 
+              descriptor</i> (see below). The host guarantees to perform the IN 
+              transaction at least that often, but it may actually do it more 
+              frequently.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Interrupt packets can 
+              have any size from 1 to 8 bytes at low speed, from 1 to 64 at full 
+              speed or up to 1024 bytes at high speed.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Use an interrupt transfer 
+              when you need to be regularly kept up to date of any changes of 
+              status in a device. Examples of their use are for a mouse or a keyboard.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Error control is very 
+              similar to that for bulk transfers.</font></p>
+          </td>
+          <td width="4%" height="622">&nbsp;</td>
+          <td width="55%" height="622" bgcolor="#FFFFFF"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Example Interrupt Transfer</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_interrupt.gif" width="320" height="150"></font></p>
+            <h3><font face="Arial, Helvetica, sans-serif">Error Control Flow</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_int_in.gif" width="320" height="230"></font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_int_out.gif" width="320" height="210"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="455" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Isochronous Transfers</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">Isochronous transfers 
+              have a guaranteed bandwidth, but error-free delivery is not guaranteed.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The main purpose of isochronous 
+              transfers is applications such as audio data transfer, where it 
+              is important to maintain the data flow, but not so important if 
+              some data gets missed or corrupted.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">An isochronous transfer 
+              uses either an IN transaction or an OUT transaction depending on 
+              the type of endpoint. The special feature of these transactions 
+              is that there is no handshake packet at the end.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">An isochronous packet 
+              may contain up to 1023 bytes at full speed, or up to 1024 at high 
+              speed. Isochronous transfers are not allowed at low speed.</font></p>
+          </td>
+          <td width="4%" height="455">&nbsp;</td>
+          <td width="55%" height="455" bgcolor="#FFFFFF"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Example Isochronous 
+              Transfer</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_isoc.gif" width="320" height="150"></font></p>
+            <h3><font face="Arial, Helvetica, sans-serif">Error Control Flow</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_isoc_in.gif" width="320" height="100"></font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_isoc_out.gif" width="320" height="80"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td height="222" width="41%" bgcolor="#FFFFCC"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Control Transfer</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">This is a bi-directional 
+              transfer which uses both an IN and an OUT endpoint. Each control 
+              transfer is made up of from 2 to several transactions.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">It is divided into three 
+              stages.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"> The SETUP stage carries 
+              8 bytes called the Setup packet. This defines the request, and specifies 
+              whether and how much data should be transferred in the DATA stage.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The DATA stage is optional. 
+              If present, it always starts with a transaction containing a DATA1. 
+              The type of transaction then alternates between DATA0 and DATA1 
+              until all the required data has been transferred.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The STATUS stage is a 
+              transaction containing a zero-length DATA1 packet. If the DATA stage 
+              was IN then the STATUS stage is OUT, and vice versa.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Control transfers are 
+              used for initial configuration of the device by the host, using 
+              Endpoint 0 OUT and Endpoint 0 IN, which are reserved for this purpose. 
+              They may be used (on the same endpoints) after configuration as 
+              part of the device-specific control protocol, if required.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The max packet size for 
+              the data stage is 8 bytes at low speed, 8, 16, 32 or 64 at full 
+              Speed and 64 for high speed.</font></p>
+          </td>
+          <td height="222" width="4%">&nbsp;</td>
+          <td height="222" width="55%"> 
+            <h3 align="left"><font face="Arial, Helvetica, sans-serif">Example 
+              Control Read</font></h3>
+            <p align="left"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_ctrl_in.gif" width="320" height="380"></font></p>
+            <h2 align="left"><font face="Arial, Helvetica, sans-serif">Error Control 
+              Flow</font></h2>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">SETUP STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_err_setup.gif" width="320" height="85"></font></p>
+            <p align="left"><font face="Arial, Helvetica, sans-serif" size="-1"><b>Notice 
+              that it is not permitted for a device to respond to a SETUP with 
+              a NAK or a STALL.</b></font></p>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">DATA STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif">(same as 
+              for bulk transfer)</font></p>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">STATUS 
+              STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif">(same as 
+              for bulk transfer)</font></p>
+            <h5 align="left">&nbsp;</h5>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr size="1" noshade>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="179" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif">Summary</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">We have examined 4 different 
+              types of data transfer, each of which uses different combinations 
+              of packets.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">We have seen Control 
+              Transfers which every device uses to implement a Standard set of 
+              requests. And we have seen three other data transfer types, which 
+              a device might use depending on its purpose.</font></p>
+          </td>
+          <td width="4%" height="179">&nbsp;</td>
+          <td width="55%" height="179" bgcolor="#FFFFFF">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="41%" height="2" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Coming up...</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">Next we will examine 
+              the standard set of requests which every USB device has to implement.</font></p>
+          </td>
+          <td width="4%" height="2">&nbsp;</td>
+          <td width="55%" height="2" bgcolor="#FFFFFF"><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><b>Forward</b></a></font></td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="14"> 
+            <div align="right"><font face="Arial, Helvetica, sans-serif" size="-2">Copyright 
+              &copy; 2006-2008 MQP Electronics Ltd</font></div>
+          </td>
+          <td width="3%" height="14">&nbsp;</td>
+          <td width="55%" height="14">&nbsp;</td>
+        </tr>
+        
+      </table>
+    </td>
+  </tr>
+</table>
+<div align="left"></div>
+</body>
+</html>

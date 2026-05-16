@@ -1,0 +1,1249 @@
+<html>
+<head>
+<title>USB Made Simple - Part 7</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" href="ums.css" type="text/css">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000" background="g_back1.gif">
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="10%" height="92"><img src="g_wedge1.gif" width="80" height="10"></td>
+    <td width="4%" height="92"><img src="g_wedge2.gif" width="30" height="4"></td>
+    <td width="86%" height="92"> 
+      <h1 align="center"><img src="ums_g_heading.gif" width="600" height="180"></h1>
+    </td>
+  </tr>
+  <tr>
+    <td width="10%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="index.html"><font color="#FFFF00">Index</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_1.htm"><font color="#FFFF00">Part 
+            1</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_2.htm"><font color="#FFFF00">Part 
+            2</font></a></font></td>
+        </tr>
+        <tr> 
+          <td height="21"><font face="Arial, Helvetica, sans-serif"><a href="ums_3.htm"><font color="#FFFF00">Part 
+            3 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><font color="#FFFF00">Part 
+            4 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_5.htm"><font color="#FFFF00">Part 
+            5</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_5.htm"><font color="#FFFF00">Part 
+            6<b> </b></font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><b><font color="#FFFF00">Part 
+            7</font></b></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><a href="ums_links.htm"><font color="#FFFF00" face="Arial, Helvetica, sans-serif">Links</font></a></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="4%">&nbsp;</td>
+    <td width="86%"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td width="21%"> <font face="Arial, Helvetica, sans-serif"><a href="ums_6.htm"><b>Back</b></a></font></td>
+          <td width="56%"> 
+            <h2 align="center"><font face="Arial, Helvetica, sans-serif">Part 
+              7 - High Speed Transactions</font></h2>
+          </td>
+          <td width="23%"> 
+            <div align="right"> <font face="Arial, Helvetica, sans-serif"><a href="ums_links.htm"><b>Forward</b></a></font></div>
+          </td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="12">
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="185"> 
+            <h2><font face="Arial, Helvetica, sans-serif">High Speed USB Transactions</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">We have looked at the 
+              mechanisms for communicating at 480 Mb/s. We now examine the packet 
+              formats in more depth, and then see how these are used to provide 
+              the various transactions: </font><font face="Arial, Helvetica, sans-serif">Control, 
+              Interrupt, Bulk and Isochronous.x</font></p>
+          </td>
+          <td width="1%" height="185"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" height="185"><font face="Arial, Helvetica, sans-serif"><img src="ums_j_skt.jpg" width="350" height="252"></font></td>
+        </tr>
+        <tr> 
+          <td colspan="3">
+            <hr noshade size="1">
+            <table width="80%" border="0" cellspacing="0" cellpadding="12" align="center">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h5><font face="Arial, Helvetica, sans-serif">Subjects covered 
+                    in this part...</font></h5>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#new_packets">The 
+                      New Packets</a></font></li>
+                    <li><a href="#token_pkt"><font face="Arial, Helvetica, sans-serif">Token 
+                      Packet</font></a></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#data_pkt">Data 
+                      Packet</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#handshake_pkt">Handshake 
+                      Packet</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#sof_pkt">SOF 
+                      Packet</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_pkt">Split 
+                      Packet</a></font></li>
+                  </ul>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#high_speed_bulk_trans">High 
+                      Speed Bulk Transactions</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#ping">Ping 
+                      Protocol</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#high_speed_isoc_trans">High 
+                      Speed Isochronous Transfers</a></font></li>
+                    <li><a href="#high_speed_int_trans"><font face="Arial, Helvetica, sans-serif">High 
+                      Speed Interrupt Transactions</font></a></li>
+                    <li><a href="#high_speed_ctrl_trans"><font face="Arial, Helvetica, sans-serif">High 
+                      Speed Control Transfers</font></a></li>
+                  </ul>
+                </td>
+                <td width="4%" bgcolor="#FFFFCC">&nbsp;</td>
+                <td width="48%" bgcolor="#FFFFCC"> 
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_trans">Split 
+                      Transactions</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_bulk_out">Split 
+                      Bulk OUT Transaction</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_bulk_in">Split 
+                      Bulk IN Transaction</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#periodic_split">Periodic 
+                      Split Transactions</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_int_out">Split 
+                      Interrupt OUT Transaction</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_int_in">Split 
+                      Interrupt IN Transaction</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_isoc_out">Split 
+                      Isochronous OUT Transaction</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#split_int_in">Split 
+                      </a><a href="#split_isoc_out">Isochronous</a><a href="#split_isoc_in"> 
+                      IN Transaction</a></font></li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <p>&nbsp;</p>
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="new_packets"></a>The 
+              New Packets</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">The packet types which 
+              have been added for high speed are:</font></p>
+            <ul>
+              <li><font face="Arial, Helvetica, sans-serif">DATA2</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">MDATA</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">NYET</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">ERR</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">SPLIT</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">PING</font></li>
+            </ul>
+            <p><font face="Arial, Helvetica, sans-serif">The table on the right 
+              gives brief details of the purposes of the six new packet types.</font></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <table width="100%" border="1" cellspacing="0" bordercolor="#0000FF" cellpadding="3">
+              <tr bgcolor="#0000FF"> 
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif"><b><font color="#FFFFFF">Packet 
+                    Identifier</font></b></font></div>
+                </td>
+                <td width="80%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif"><b><font color="#FFFFFF">Usage</font></b></font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">DATA2</font></div>
+                </td>
+                <td width="80%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">This data packet 
+                    token has been added as part of a system for controlling multiple 
+                    isochronous IN packets during one microframe at high speed. 
+                    </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">For each isochronous 
+                    IN packet requested, the suffix of the DATAx PID represents 
+                    the remaining number of packets to be transferred during the 
+                    current micro-frame.</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">MDATA</font></div>
+                </td>
+                <td width="80%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">This data packet 
+                    token has been added as part of a system for controlling multiple 
+                    isochronous OUT packets during one microframe at high speed. 
+                    </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">All but the last 
+                    packet sent during a microframe use the MDATA PID. The last 
+                    packet sent uses DATA0, DATA1 or DATA2 depending on whether 
+                    one, two or three packets were sent.</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">NYET</font></div>
+                </td>
+                <td width="80%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">NYET handshake 
+                    packets are used in 2 different high speed situations.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">One use is when 
+                    a hub wishes to respond to a 'complete split' transaction 
+                    to say that it is has not yet been completed.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The other use is 
+                    during the high speed control or bulk OUT PING protocol. It 
+                    means that the endpoint has accepted the data but is not yet 
+                    ready for further data.</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">ERR</font></div>
+                </td>
+                <td width="80%"><font face="Arial, Helvetica, sans-serif">Used 
+                  during the high speed split protocol by a hub, to indicate that 
+                  there was an error on the full or low speed bus.</font></td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">SPLIT</font></div>
+                </td>
+                <td width="80%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">This packet introduces 
+                    a Start Split transaction or a Complete Split transaction. 
+                    </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Split transactions 
+                    are used at high speed to communicate to a hub, the details 
+                    of a low or full speed transaction which it is expected to 
+                    handle, and to get back the results.</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="20%"> 
+                  <div align="left"><font face="Arial, Helvetica, sans-serif">PING</font></div>
+                </td>
+                <td width="80%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">A PING packet is 
+                    used on high speed Control and Bulk OUT endpoints. They may 
+                    be sent by the host to establish whether the endpoint is ready 
+                    to accept a DATA0 or DATA1 packet, and will result in an ACK 
+                    or a NAK packet from the device. </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">This is an efficiency 
+                    improvement, as at full or low speed, the data packet has 
+                    to be sent in full, and only then can the endpoint respond 
+                    with a NAK.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="43" bgcolor="#FFFFCC"> 
+            <p><font face="Arial, Helvetica, sans-serif">For the sake of completeness 
+              we will now look at the packet formats for all the available packets 
+              type, including the ones already covered for low and full speed.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">There are five different 
+              packet formats based on which PID the packet starts with.</font></p>
+          </td>
+          <td width="4%" height="43"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="55%" height="43"><font face="Arial, Helvetica, sans-serif"></font></td>
+        </tr>
+        <tr> 
+          <td width="41%" height="216" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif"><a name="token_pkt"></a>Token 
+              Packet</font></h5>
+            <table width="95%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">ADDR</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">ENDP</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC5</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">7 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">4 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">5 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <p><font face="Arial, Helvetica, sans-serif">Used for SETUP, OUT, 
+              IN <b>and PING</b> packets. They are always the first packet in 
+              a transaction, identifying the targeted endpoint, and the purpose 
+              of the transaction.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">(The SOF packet is also 
+              defined as a Token packet, but has a slightly different format and 
+              purpose, which is described below.)</font></p>
+          </td>
+          <td width="4%" height="216"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="55%" height="216"> 
+            <p><font face="Arial, Helvetica, sans-serif"><b>The token packet contains 
+              two addressing elements:</b></font></p>
+            <h5><font face="Arial, Helvetica, sans-serif">Address (7 bits)</font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">This device address can 
+              address up to 127 devices. Address 0 is reserved for a device which 
+              has not yet had its address set.</font></p>
+            <h5><font face="Arial, Helvetica, sans-serif">Endpoint number (4 bits) 
+              </font></h5>
+            <p><font face="Arial, Helvetica, sans-serif">There can be up to 16 
+              possible endpoints in a device in each direction. The direction 
+              is implicit in the PID. OUT, SETUP and PING PIDs will refer to the 
+              OUT endpoint, and an IN PID will refer to the IN endpoint.</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="237" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif"><a name="data_pkt"></a>Data 
+              Packet</font></h5>
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">DATA</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC16</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">(0-1024)<br>
+                    x 8 bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">16 
+                    bits</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"> 
+              <p>&nbsp;</p>
+            </div>
+            <p><font face="Arial, Helvetica, sans-serif">Used for DATA0, DATA1, 
+              <b>DATA2 and MDATA</b> packets. If a transaction has a data stage 
+              this is the packet format used.</font></p>
+          </td>
+          <td width="4%" height="237"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="55%" height="237"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td> 
+                  <p><font face="Arial, Helvetica, sans-serif"><b>DATA0 and DATA1 
+                    PIDs</b> are used in Low and Full speed links as part of an 
+                    error-checking system. When used, all data packets on a particular 
+                    endpoint use an alternating DATA0 / DATA1 so that the endpoint 
+                    knows if a received packet is the one it is expecting. If 
+                    it is not it will still acknowledge (ACK) the packet as it 
+                    is correctly received, but will then discard the data, assuming 
+                    that it has been re-sent because the host missed seeing the 
+                    ACK the first time it sent the data packet.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif"><b>DATA2</b> (along 
+                    with DATA1 and DATA0) is used in High Speed links as part 
+                    of a system for controlling multiple isochronous IN packets 
+                    during one microframe at high speed. </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif"><b>MDATA</b> (along 
+                    with DATA2, DATA1 and DATA0) is used in High Speed links as 
+                    part of a system for controlling multiple isochronous OUT 
+                    packets during one microframe at high speed. </font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="97" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif"><a name="handshake_pkt"></a>Handshake 
+              Packet</font></h5>
+            <table width="50%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits </font></div>
+                </td>
+                <td> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">Used for ACK, NAK, STALL 
+              <b>and NYET</b> packets. This is the packet format used in the status 
+              stage of a transaction, when required.</font></p>
+          </td>
+          <td width="4%" height="97"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="55%" height="97"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td height="275"> 
+                  <h5><font face="Arial, Helvetica, sans-serif">ACK</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Receiver acknowledges 
+                    receiving error free packet.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">NAK</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Receiving device 
+                    cannot accept data or transmitting device cannot send data.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">STALL</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">Endpoint is halted, 
+                    or control pipe request is not supported.</font></p>
+                  <h5><font face="Arial, Helvetica, sans-serif">NYET</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">No response yet 
+                    from receiver (high speed only).</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="41%" height="269" bgcolor="#FFFFCC"> 
+            <h5><font face="Arial, Helvetica, sans-serif"><a name="sof_pkt"></a>SOF 
+              Packet</font></h5>
+            <table width="91%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Frame 
+                    No.</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC5</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">11 
+                    bits</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">5 
+                    bits</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">The Start of Frame packet 
+              is sent every 1 ms on full speed links. The frame is used as a time 
+              frame in which to schedule the data transfers which are required. 
+              For example, an isochronous endpoint will be assigned one transfer 
+              per frame.</font></p>
+          </td>
+          <td width="4%" height="269"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="55%" height="269"> 
+            <table width="90%" border="1" cellspacing="0" cellpadding="2" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td> 
+                  <h5><font face="Arial, Helvetica, sans-serif">Frames and Microframes</font></h5>
+                  <p><font face="Arial, Helvetica, sans-serif">On a low speed 
+                    link, to preserve bandwidth, a Keep Alive signal is sent every 
+                    millisecond, instead of a Start of Frame packet. In fact Keep 
+                    Alives may be sent by a hub on a low speed link whenever the 
+                    hub sees a full speed token packet.</font></p>
+                  <p align="left"><font face="Arial, Helvetica, sans-serif">At 
+                    high speed the 1 ms frame is divided into 8 microframes of 
+                    125 us. A SOF is sent at the start of each of these 8 microframes, 
+                    each having the same frame number, which then increments every 
+                    1 ms frame.</font></p>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="364"> 
+            <h5><font face="Arial, Helvetica, sans-serif"><a name="split_pkt"></a>Split 
+              Packet</font></h5>
+            <table width="99%" border="1" cellspacing="0" cellpadding="2" bgcolor="#66FFFF" bordercolor="#0000FF">
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Sync</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">PID</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Hub 
+                    Addr </font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">SC</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">Port</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font size="-1" face="Arial, Helvetica, sans-serif">S</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font size="-1" face="Arial, Helvetica, sans-serif">E</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">ET</font></div>
+                </td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">CRC5</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">EOP</font></div>
+                </td>
+              </tr>
+              <tr> 
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">&nbsp;</font></div>
+                </td>
+                <td width="18%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8 
+                    bits</font></div>
+                </td>
+                <td width="23%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">7 
+                    bits</font></div>
+                </td>
+                <td width="21%"> 
+                  <p><font face="Arial, Helvetica, sans-serif" size="-1">1<br>
+                    bit</font></p>
+                </td>
+                <td width="21%"><font face="Arial, Helvetica, sans-serif" size="-1">7 
+                  bits</font></td>
+                <td width="21%"><font size="-1" face="Arial, Helvetica, sans-serif">1<br>
+                  bit</font></td>
+                <td width="21%"><font size="-1" face="Arial, Helvetica, sans-serif">1<br>
+                  bit</font></td>
+                <td width="21%"><font face="Arial, Helvetica, sans-serif" size="-1">2<br>
+                  bits</font></td>
+                <td width="21%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">5<br>
+                    bits</font></div>
+                </td>
+                <td width="20%"> 
+                  <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">&nbsp;</font></div>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">The <b>SPLIT</b> packet 
+              is the first packet in either a Start Split transaction or a Complete 
+              Split transaction, sent to a high speed hub when it is handling 
+              a low or full speed device.</font></p>
+          </td>
+          <td width="1%" height="364"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" height="364"> 
+            <p><font face="Arial, Helvetica, sans-serif"><b>Control, Interrupt 
+              or Bulk Endpoints</b></font></p>
+            <table width="100%" border="1" bordercolor="#33FF00" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td width="21%"><font face="Arial, Helvetica, sans-serif">SC</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">Start 
+                  / Complete</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">0 = 
+                  Start, 1 = Complete</font></td>
+              </tr>
+              <tr> 
+                <td width="21%"><font face="Arial, Helvetica, sans-serif">S</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">Speed</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">0 = 
+                  Full, 1 = Low</font></td>
+              </tr>
+              <tr> 
+                <td width="21%"><font face="Arial, Helvetica, sans-serif">E</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">not 
+                  used </font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">0</font></td>
+              </tr>
+              <tr> 
+                <td width="21%"><font face="Arial, Helvetica, sans-serif">ET</font></td>
+                <td width="79%"><font face="Arial, Helvetica, sans-serif">Endpoint 
+                  Type</font></td>
+                <td width="79%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">00 = Control<br>
+                    <font color="#999999">01 = Isochronous</font><br>
+                    10 = Bulk<br>
+                    11 = Interrupt</font></p>
+                </td>
+              </tr>
+            </table>
+            <p><font face="Arial, Helvetica, sans-serif"><b>Isochronous Endpoints</b></font></p>
+            <table width="100%" border="1" bordercolor="#33FF00" cellspacing="0" cellpadding="5">
+              <tr> 
+                <td width="18%"><font face="Arial, Helvetica, sans-serif">SC</font></td>
+                <td width="36%"><font face="Arial, Helvetica, sans-serif">Start 
+                  / Complete</font></td>
+                <td width="46%"><font face="Arial, Helvetica, sans-serif">0 = 
+                  Start, 1 = Complete</font></td>
+              </tr>
+              <tr> 
+                <td width="18%"><font face="Arial, Helvetica, sans-serif">S and 
+                  E</font></td>
+                <td width="36%"><font face="Arial, Helvetica, sans-serif">Start 
+                  and End</font></td>
+                <td width="46%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">00 = HS data is 
+                    middle of FS data payload</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">01 = HS data is 
+                    end of FS data payload</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">10 = HS data is 
+                    start of FS data payload<br>
+                    </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">11 = HS data is 
+                    all of FS data payload</font></p>
+                </td>
+              </tr>
+              <tr> 
+                <td width="18%"><font face="Arial, Helvetica, sans-serif">ET</font></td>
+                <td width="36%"><font face="Arial, Helvetica, sans-serif">Endpoint 
+                  Type</font></td>
+                <td width="46%"> 
+                  <p><font color="#999999" face="Arial, Helvetica, sans-serif">00 
+                    = Control<br>
+                    </font><font face="Arial, Helvetica, sans-serif">01 = Isochronous</font><font color="#999999" face="Arial, Helvetica, sans-serif"><br>
+                    10 = Bulk</font><font face="Arial, Helvetica, sans-serif"><br>
+                    <font color="#999999">11 = Interrupt</font></font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"><font face="Arial, Helvetica, sans-serif"></font></td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="high_speed_bulk_trans"></a>High 
+              Speed Bulk Transactions</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">These work much like 
+              full speed bulk transactions. The differences are:</font></p>
+            <ul>
+              <li><font face="Arial, Helvetica, sans-serif">The maximum packet 
+                size can only be specifed as 512 bytes.</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">A more efficient method 
+                of doing OUT transfers has been introduced, involving the use 
+                of PING transactions, and the new NYET handshake packet. </font></li>
+            </ul>
+            <h4></h4>
+            <h4><font face="Arial, Helvetica, sans-serif"><a name="ping"></a>Ping 
+              Protocol</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">Before sending an OUT 
+              transaction to a bulk endpoint, the host controller may send a PING 
+              packet. The response to the PING will be ACK or NAK. ACK means that 
+              the endpoint is ready to accept an OUT transaction of maximum packet 
+              size for the endpoint. NAK means it is not. The host may continue 
+              to send PINGs after a NAK, or it may choose to wait for a number 
+              of microframes before re-trying.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">On high speed Bulk OUT 
+              endpoints, the endpoint descriptor value <b>bInterval</b> is required 
+              to specify the NAK rate of the endpoint. The specification is misleading 
+              when it defines this value. The value represents the number of microframes 
+              which the host would have to wait, after receiving a NAK in response 
+              to a PING, before a further PING is guaranteed to elicit an ACK 
+              response. 0 means the endpoint never NAKs. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">A further new feature 
+              is that, after a successful OUT transaction, the endpoint may respond 
+              with ACK to indicate that it is already prepared to accept a further 
+              packet, or NYET to indicate that it received the data correctly, 
+              but is not yet ready to accept further data. </font></p>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <h3><font face="Arial, Helvetica, sans-serif">BULK Transfer Error 
+              Control Flow</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_err_bulk_in.gif" width="330" height="196"></font></p>
+            <p>&nbsp;</p>
+            <font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_err_bulk_out.gif" width="330" height="426"></font></td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="high_speed_isoc_trans"></a>High 
+              Speed Isochronous Transfers</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">High speed isochronous 
+              transfers have an extended control system to allow up to 3 isochronous 
+              transactions per microframe, allowing a data rate of up to 192 Mb/s. 
+              (The specification refers to an isochronous endpoint with more than 
+              1 packet per microframe as a 'High Bandwidth' endpoint.)</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">As isochronous transactions 
+              do not include a acknowledgement (handshake) packet, a system was 
+              specified which allows the recipient to be aware, if a data packet 
+              is lost, which one it was*. </font></p>
+            <h4><font face="Arial, Helvetica, sans-serif">Isochronous IN </font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When requesting IN transactions, 
+              the device packages them in DATA2, DATA1 or DATA0 packets, depending 
+              on how many packets per microframe are specified, and which one 
+              it is. See diagram on the right.</font></p>
+            <p>&nbsp;</p>
+            <p></p>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" valign="bottom"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Isochronous IN Protocol</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_isoc_in.gif"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <p></p>
+            <h4><font face="Arial, Helvetica, sans-serif">Isochronous OUT</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">When sending OUT transactions, 
+              the host packages them either in MDATA or DATA0 DATA1 or DATA2 packets, 
+              as shown in the diagram on the right</font></p>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif"><i>*In fact this does 
+              not apply to Isochronous OUT transfers with three transactions per 
+              microframe because the first two packets use MDATA as a PID.</i></font></p>
+          </td>
+          <td width="1%">&nbsp;</td>
+          <td width="51%"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Isochronous OUT Protocol</font></h4>
+            <h4><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_isoc_out.gif"></font></h4>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="15"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="high_speed_int_trans"></a>High 
+              Speed Interrupt Transactions</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">These work much as for 
+              full and low speed, except that the endpoint descriptor may specify 
+              up to 3 interrupt transactions per microframe, allowing a data rate 
+              of up to 192 Mb/s. (The specification refers to an interrupt endpoint 
+              with more than 1 packet per microframe as a 'High Bandwidth' endpoint.)</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The protocol is the same 
+              as for full and low speed, in that DATA0 and DATA1 packets are alternated.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">If more than one transaction 
+              per frame is specified and a transaction is NAKed, then the host 
+              should attempt no more transactions on that endpoint within the 
+              same microframe.</font></p>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Interrupt Transfer Error 
+              Control Flow</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_err_bulk_in.gif" width="330" height="196"></font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_err_int_out.gif" width="330" height="198"></font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="high_speed_ctrl_trans"></a>High 
+              Speed Control Transfers</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">High speed control transfers 
+              are the same as full and low speed transfers, with the following 
+              exceptions:</font></p>
+            <ul>
+              <li><font face="Arial, Helvetica, sans-serif">For high speed control 
+                endpoints, the maximum packet size for the data stage is fixed 
+                at 64 bytes.</font></li>
+              <li><font face="Arial, Helvetica, sans-serif">During a data phase, 
+                using an OUT PID, the transaction follows the rules above for 
+                a Bulk OUT transaction, including the PING protocol.</font></li>
+            </ul>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <h2 align="left"><font face="Arial, Helvetica, sans-serif">Error Control 
+              Flow</font></h2>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">SETUP STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif"><img src="ums_g_hs_err_setup.gif" width="330" height="112"></font></p>
+            <p align="left"><font face="Arial, Helvetica, sans-serif" size="-1"><b>Notice 
+              that it is not permitted for a device to respond to a SETUP with 
+              a NAK, STALL or NYET.</b></font></p>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">DATA STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif">(same as 
+              for <b>high speed</b> bulk transfer)</font></p>
+            <h5 align="left"><font face="Arial, Helvetica, sans-serif">STATUS 
+              STAGE</font></h5>
+            <p align="left"><font face="Arial, Helvetica, sans-serif">(same as 
+              for bulk transfer)</font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="15"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="404"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_trans"></a>Split 
+              Transactions</font></h2>
+            <h4><font face="Arial, Helvetica, sans-serif">Transaction Translator</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">Split transactions form 
+              a high speed only protocol between host controllers and high speed 
+              hubs, which are handling full or low speed traffic. This is the 
+              means by which the full or low speed traffic is prevented from degrading 
+              the high speed bus performance. Each high speed hub is required 
+              to have a 'Transaction Translator' which handles the full or low 
+              speed transactions to particular ports.</font></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <h4><font face="Arial, Helvetica, sans-serif">Packet Sequences</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">To overcome the difference 
+              in speeds, each full or low speed transaction is split into two 
+              parts on the high speed bus; a Start Split Transaction and a Complete 
+              Split Transaction. In between, the Transaction Translator independently 
+              handles the full or low speed transaction.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The illustration to the 
+              right shows how the host defines the required full or low speed 
+              transaction, allows the hub to deal with the transaction at that 
+              speed and then checks back later for the result.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The actual packet sequence 
+              in a split transaction varies, depending on the type of transaction 
+              involved, and will be described in more detail, in the following 
+              paragraphs.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">This will be a brief 
+              summary of what to expect, however the full USB specification contains 
+              masses of detail which would be needed to actually implement a host 
+              controller or hub.</font></p>
+            </td>
+          <td width="1%" height="404"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" height="404"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Transaction Translator</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">This is a much simplified 
+              diagram of the transaction translator within a high speed hub.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"> <img src="ums_g_trans_trans.gif" width="330" height="265"></font> 
+            </p>
+            <h4>&nbsp;</h4>
+            <h4><font face="Arial, Helvetica, sans-serif">Example Split Transaction 
+              Sequence</font></h4>
+            <p><font face="Arial, Helvetica, sans-serif">This illustrates a typical 
+              split transaction sequence; in this case a split interrupt IN. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_split_trans.gif"></font> 
+            </p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="350"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_bulk_out"></a>Split 
+              Bulk OUT Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">For a split bulk OUT 
+              transaction, the host sends a Start Split packet specifying the 
+              hub address and port number, and speed (full), with the 'endpoint 
+              type' set to 'bulk'. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">It then sends an OUT 
+              token packet to identify the full speed transaction type, device 
+              and endpoint address, followed by the data packet for onward transmission 
+              to the target endpoint.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">If the Transaction Translator 
+              receives these packets correctly and has an available buffer, it 
+              will respond with an ACK packet, otherwise it will respond with 
+              a NAK packet.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">At this point the Transaction 
+              Translator proceeds to send this transaction to the specified full 
+              speed endpoint, and to get a response, which it stores, ready to 
+              pass back to the host during a Complete Split transaction.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">When the host controller 
+              decides it is appropriate, it checks for the result by issuing a 
+              Complete Split transaction. The Complete Split packet and the OUT 
+              token packet are the same as for the Start Split transaction, except 
+              for the Start/Complete bit of the packet. This allows the hub to 
+              verify which transaction it is to present the results of.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">If the full speed transaction 
+              is not yet completed, the hub will respond with a NYET packet and 
+              the host will attempt the Compete Split transaction sometime later. 
+              If it <i>is</i> complete, then a packet containing the actual result 
+              (ACK, NAK or STALL) is sent to the host. </font></p>
+          </td>
+          <td width="1%" height="350"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" height="350"> 
+            <div align="center"> 
+              <h4><font face="Arial, Helvetica, sans-serif">Split Bulk OUT Transaction</font></h4>
+              <h4>&nbsp;</h4>
+              <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_split_err_bulk_out.gif"></font></p>
+            </div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="32"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" height="350" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_bulk_in"></a>Split 
+              Bulk IN Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">A split bulk IN transaction 
+              is similar to a split bulk OUT, except that the DATA0/1 packet occurs 
+              during the Complete Split stage because it is now part of the response. 
+              If data was returned then the data packet appears in lieu of a handshake 
+              packet. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The actual ACK of the 
+              full speed transaction was sent by the Transaction Translator to 
+              the device on receiving the DATA0 or DATA1 packet from the device, 
+              and the host will keep track of which data it has received. If it 
+              fails to receive a valid packet it will retry the Complete Split 
+              Transaction.</font></p>
+          </td>
+          <td width="1%" height="350"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%" height="350"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Split Bulk IN Transaction</font></h4>
+            <h4>&nbsp;</h4>
+            <p><font face="Arial, Helvetica, sans-serif"><img src="ums_g_split_err_bulk_in.gif" width="330" height="353"> 
+              </font></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="85%" border="1" cellspacing="0" cellpadding="10" bordercolor="#33FF00" align="center">
+              <tr> 
+                <td valign="top" width="50%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="periodic_split"></a>Periodic 
+                    Split Transactions</font></h2>
+                  <h4><font face="Arial, Helvetica, sans-serif">Interrupt and 
+                    Isochronous</font></h4>
+                  <p><font face="Arial, Helvetica, sans-serif">Split Interrupt 
+                    and Isochronous transactions need special treatment because 
+                    of the bandwidth guarantee which they offer. Every full / 
+                    low speed device using these endpoint types, which is added 
+                    to the bus, is given a guaranteed allocation on the full / 
+                    low speed bus, which also has to be conveyed on the high speed 
+                    bus. The mechanism is complex and described in full in chapter 
+                    11 of the USB specification. </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The result of this 
+                    mechanism is that periodic transactions on the full or low 
+                    speed bus are transferred in packets of data of at most 188 
+                    bytes. </font></p>
+                </td>
+                <td valign="bottom" width="50%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">So a longer transaction, 
+                    which can be up to 1023 bytes long for an isochronous endpoint, 
+                    will be transferred in multiple Start Split transactions for 
+                    OUT transfers, or multiple Complete Split transactions for 
+                    IN transfers.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Furthermore, on 
+                    periodic IN transactions, data received by the hub from the 
+                    device within a given microframe is sent in response to a 
+                    Complete Split, even though it represents only part of the 
+                    full or low speed data packet. A full speed interrupt IN packet 
+                    of, say, 64 bytes, which spans two microframes, will be conveyed 
+                    in up to two Complete Splits. The data packet in the first 
+                    part will use an MDATA PID to indicate that it is not complete.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Isochronous IN 
+                    transactions are similar, but can span up to 6 microframes.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_int_out"></a>Split 
+              Interrupt OUT Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">For an interrupt OUT 
+              transaction the maximum data size is 64 bytes, so these are always 
+              transferred within a single Start Split transaction. There is no 
+              need for a handshake packet from the hub, as the interrupt will 
+              not be retried in the same frame, if missed.</font></p>
+            <p>&nbsp;</p>
+            <p><font face="Arial, Helvetica, sans-serif">As with a Bulk transaction, 
+              the Complete Split will elicit a handshake packet from the device 
+              if it responded with one itself, or with ERR if there was an error 
+              on the full or low speed bus, or NYET if the Transaction Translator 
+              has not completed its task.</font></p>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Split Interrupt OUT 
+              Transaction </font></h4>
+            <h4><img src="ums_g_split_err_int_out.gif" width="330" height="399"></h4>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_int_in"></a>Split 
+              Interrupt IN Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">For a split interrupt 
+              IN, we issue a Start Split (without expecting a handshake from the 
+              hub). </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The Complete Split may 
+              result in the complete data packet (DATA0 / DATA1) being returned, 
+              but it is also possible that during the microframe, only part of 
+              the data was so far collected, in which case an MDATA PID is used 
+              to indicate that a further Complete Split will be necessary in the 
+              next microframe.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">Handshake packets NAK 
+              or STALL will indicate that the device responded with this packet. 
+              ERR indicates that there was an error on the full or low speed bus. 
+              NYET indicates that the Transaction Translator has not completed 
+              its task.</font></p>
+            <h2></h2>
+          </td>
+          <td width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="51%"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Split Interrupt IN Transaction</font></h4>
+            <h4><font face="Arial, Helvetica, sans-serif"><img src="ums_g_split_err_int_in.gif" width="330" height="444"> 
+              </font></h4>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_isoc_out"></a>Split 
+              Isochronous OUT Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">On the face of it, this 
+              is the simplest split transaction. There is no handshake from the 
+              hub, and no Complete Split, as the delivery of isochronous transactions 
+              is not checked.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">It is complicated by 
+              the fact that single full speed isochronous transactions are divided 
+              up into separate Start Split transactions of at most 188 bytes each, 
+              sent one per microframe.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The Start Split packet 
+              has its <b>S</b>tart and <b>E</b>nd bits set to identify which part 
+              of the payload is being transferred.</font></p>
+          </td>
+          <td width="1%">&nbsp;</td>
+          <td width="51%"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Split Isochronous OUT 
+              Transaction</font></h4>
+            <p><img src="ums_g_split_err_isoc_out.gif" width="330" height="185"></p>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC"> 
+            <h2><font face="Arial, Helvetica, sans-serif"><a name="split_isoc_in"></a>Split 
+              Isochronous IN Transaction</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">For a split isochronous 
+              IN, we issue a Start Split (without expecting a handshake from the 
+              hub). </font></p>
+            <p><font face="Arial, Helvetica, sans-serif">The Complete Split may 
+              result in the complete data packet (DATA0) being returned, but it 
+              is also possible that during the microframe, only part of the data 
+              was so far collected, in which case an MDATA PID is used to indicate 
+              that a further Complete Split will be necessary in the next microframe.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif"> ERR indicates that there 
+              was an error on the full or low speed bus. NYET indicates that the 
+              Transaction Translator has not completed its task.</font></p>
+          </td>
+          <td width="1%">&nbsp;</td>
+          <td width="51%"> 
+            <h4><font face="Arial, Helvetica, sans-serif">Split Isochronous IN 
+              Transaction</font></h4>
+            <h4><img src="ums_g_split_err_isoc_in.gif" width="330" height="360"></h4>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="45"> 
+            <h2><font face="Arial, Helvetica, sans-serif">Summary</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">We have examined how 
+              each type of data transfer works at high speed.</font></p>
+          </td>
+          <td height="43" width="1%">&nbsp;</td>
+          <td height="43" width="51%">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="45"> 
+            <h2><font face="Arial, Helvetica, sans-serif">Coming up...</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">...to be announced...</font></p>
+          </td>
+          <td height="43" width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td height="43" width="51%"><font face="Arial, Helvetica, sans-serif"><a href="ums_links.htm"><b>Forward</b></a></font></td>
+        </tr>
+        <tr> 
+          <td width="48%" bgcolor="#FFFFCC" height="45"> 
+            <div align="right"><font face="Arial, Helvetica, sans-serif" size="-2">Copyright 
+              &copy; 2006-2008 MQP Electronics Ltd</font></div>
+          </td>
+          <td height="43" width="1%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td height="43" width="51%"><font face="Arial, Helvetica, sans-serif"></font></td>
+        </tr>
+        
+      </table>
+    </td>
+  </tr>
+</table>
+<div align="left"></div>
+</body>
+</html>

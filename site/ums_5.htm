@@ -1,0 +1,486 @@
+<html>
+<head>
+<title>USB Made Simple - Part 5</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" href="ums.css" type="text/css">
+<meta name="keywords" content="USB simple easy nutshell explained introduction">
+<meta name="description" content="Example Device. Typical Human Interface Device (HID) - a mouse, analysed.">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000" background="g_back1.gif">
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr> 
+    <td width="10%"><img src="g_wedge1.gif" width="80" height="10"></td>
+    <td width="4%"><img src="g_wedge2.gif" width="30" height="4"></td>
+    <td width="86%"> 
+      <h1 align="center"><img src="ums_g_heading.gif" width="600" height="180"></h1>
+    </td>
+  </tr>
+  <tr> 
+    <td width="10%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="index.html"><font color="#FFFF00">Index</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_1.htm"><font color="#FFFF00">Part 
+            1</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_2.htm"><font color="#FFFF00">Part 
+            2</font></a></font></td>
+        </tr>
+        <tr> 
+          <td height="21"><font face="Arial, Helvetica, sans-serif"><a href="ums_3.htm"><font color="#FFFF00">Part 
+            3 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><font color="#FFFF00">Part 
+            4 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><font color="#FFFF00"><b>Part 
+            5</b></font></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_6.htm"><font color="#FFFF00">Part 
+            6 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_7.htm"><font color="#FFFF00">Part 
+            7</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><a href="ums_links.htm"><font color="#FFFF00" face="Arial, Helvetica, sans-serif">Links</font></a></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="4%">&nbsp;</td>
+    <td width="86%"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td width="21%" height="2"><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><b>Back</b></a></font></td>
+          <td width="56%" height="2"> 
+            <h2 align="center"><font face="Arial, Helvetica, sans-serif">Part 
+              5 - Example Device</font></h2>
+          </td>
+          <td width="23%" height="2"> 
+            <div align="right"> <font face="Arial, Helvetica, sans-serif"><a href="ums_6.htm"><b>Forward</b></a></font></div>
+          </td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <table width="100%" border="0" cellspacing="0" cellpadding="12" >
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td width="52%" bgcolor="#FFFFCC"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Typical Human Interface 
+              Device (HID)</font></h3>
+            <h3><font face="Arial, Helvetica, sans-serif"> A Mouse</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">We are going to look 
+              at a typical enumeration and subsequent operation of one of the 
+              simplest USB devices around; the mouse. Below you will see the output 
+              of a hardware bus analyser which is capturing all the USB traffic 
+              involved when a mouse is plugged in. Let us emphasise straight away 
+              that this is just a typical sequence, which can vary widely depending 
+              on the host, which in this case was Windows XP.</font></p>
+          </td>
+          <td width="4%"><font face="Arial, Helvetica, sans-serif"></font></td>
+          <td width="44%"> 
+            <div align="center"><font face="Arial, Helvetica, sans-serif"><img src="ums_j_mouse_sm.jpg" width="200" height="88"></font></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="105"> 
+            <p>&nbsp;</p>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="82%" height="63"> 
+                  <p><font face="Arial, Helvetica, sans-serif">For the display 
+                    shown below, the analyser has been set to display only Bus 
+                    States, and the highest level Transfers. Each Control Transfer 
+                    shown is made up of a series of transactions, each of which 
+                    is made up of a series of packets, as we shall see later.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The capture begins 
+                    1.9 seconds before the mouse is plugged in. The analyser indicates 
+                    that the device has been plugged in, and that it a low speed 
+                    device (because the pull-up resistor is on D-). After 3 ms, 
+                    because the host is not yet allowed to send any data, the 
+                    device is SUSPENDED because of not seeing any activity on 
+                    the data lines. Shortly afterwards, the host issues a RESET 
+                    which in this case lasted 31 ms</font>.</p>
+                  <p><font face="Arial, Helvetica, sans-serif">It then performs 
+                    a Get Descriptor request (to the default address 0), to discover 
+                    the maximum packet size defined for the control endpoint. 
+                    Having got this information, it resets the device again, and 
+                    then sends a Set Address request, setting device address to 
+                    1 in this example.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%" height="63">&nbsp;</td>
+                <td width="17%" height="63">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="221"><img src="ums_g_an_ms_1.gif" width="520" height="250"></td>
+                <td width="1%" height="221">&nbsp;</td>
+                <td width="17%" height="221">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">All the requests 
+                    from now on are sent to device address 1. The host has now 
+                    requested the device descriptor. (<a href="ums_ms_desc_dev.htm" target="_blank">Click 
+                    here</a> to see analysis of the device descriptor in a separate 
+                    window). It has also requested the first nine bytes of the 
+                    configuration descriptor collection. Remember that when the 
+                    host requests the configuration descriptor, it will also get, 
+                    following it, the interface and endpoint descriptors and maybe 
+                    others. But the host doesn't know the total length of this 
+                    collection. It does, however, know that the configuration 
+                    descriptor itself is 9 bytes long, and that this descriptor 
+                    contains a value for the total length of the descriptor collection. 
+                    So it starts by requesting just the configuration descriptor 
+                    using Get Configuration Descriptor with a required length 
+                    of 9. (<a href="ums_ms_desc_conf.htm" target="_blank">Click 
+                    here</a> to see an analysis of the configuration descriptor 
+                    collection in a separate window.)</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Additionally the 
+                    host has requested String Descriptor 0, for the list of supported 
+                    string languages, and descriptor index 2, which in this case 
+                    has been assigned to the product description string.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="145"><img src="ums_g_an_ms_2.gif" width="520" height="210"></td>
+                <td width="1%" height="145">&nbsp;</td>
+                <td width="17%" height="145">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">After this it can 
+                    be seen that the host has asked for much of the information 
+                    again. This can occur for various reasons, such as the different 
+                    drivers in the stack each asking the same questions for their 
+                    own purposes.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The host has then 
+                    sent the Set Configuration request, and from that point in 
+                    time, the device is 'configured' and is able to perform its 
+                    purpose in life. The host is now able to send the HID class 
+                    request 'Set Idle', to tell the device only to respond to 
+                    an interrupt IN transaction if a new event occurs. (<i>In 
+                    any case when an IN request is sent and there is no change 
+                    to report, the device will respond with a NAK packet. The 
+                    analyser has been set not to display these 'NAKed' transactions 
+                    so we will not see them here</i>) It then also requests the 
+                    HID class report descriptor, which in this case informs the 
+                    appropriate driver to expect to receive a 4 byte report of 
+                    mouse events on its interrupt IN endpoint.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"><img src="ums_g_an_ms_3.gif" width="520" height="338"></td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">At this point the 
+                    driver starts sending interrupt IN requests, and when any 
+                    event is available to be reported the interrupt data transfer 
+                    succeeds and 4 bytes of data are transferred. </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">You may notice 
+                    that there was a nearly 3 second gap before the mouse was 
+                    first moved. In the meantime there were still regular interrupt 
+                    IN transactions, which were NAKed by the device, as it had 
+                    nothing to report. To avoid the display being swamped by these 
+                    NAKed transactions, the analyser has been set not to display 
+                    them.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"><img src="ums_g_an_ms_4.gif" width="520" height="211"></td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+            </table>
+            <p>&nbsp;</p>
+            </td>
+        </tr>
+        <tr> 
+          <td colspan="3" bgcolor="#FFFFCC" height="105"><font face="Arial, Helvetica, sans-serif">We 
+            are now going to examine one of these control transfers in more detail. 
+            By clicking a button on the analyser we can reveal the transactions 
+            which make up a particular control transfer. We will select a Get 
+            Device Descriptor control transfer to examine.</font></td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="105"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="82%" height="95"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">As you can see 
+                    the Get Device Descriptor is made up, in this case, of five 
+                    transactions. The first transaction (SETUP) comprises the 
+                    setup stage.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The next three 
+                    (IN) transactions represent the data stage, during which the 
+                    18 bytes of the descriptor are transferred back to the host.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The final (OUT) 
+                    transaction is the status stage, to acknowledge successful 
+                    completion.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%" height="95">&nbsp;</td>
+                <td width="17%" height="95">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="221"><img src="ums_g_an_ms_5.gif" width="520" height="253"></td>
+                <td width="1%" height="221">&nbsp;</td>
+                <td width="17%" height="221">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">Each of these transactions 
+                    is made up of packets. By selecting some of these transactions 
+                    to expand, we can see the details of the packets. Notice that 
+                    we have chosen to expand only one of the three IN transactions, 
+                    to keep the picture smaller. Notice how, for example the SETUP 
+                    transaction is made up of three packets. You should be able 
+                    to recognise the component parts of each packet by now.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="145"><img src="ums_g_an_ms_6.gif" width="550" height="631"></td>
+                <td width="1%" height="145">&nbsp;</td>
+                <td width="17%" height="145">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">A good analyser 
+                    will be able to show you the data from the descriptor in an 
+                    analysed form, to save you the trouble. (<a href="ums_ms_desc_dev.htm" target="_blank">Click 
+                    here</a> to see analysis of the device descriptor in a separate 
+                    window).</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <h4><font face="Arial, Helvetica, sans-serif">Device Descriptor 
+                    Analysis</font></h4>
+                  <p><img src="ums_g_an_ms_7s.gif" width="355" height="419"></p>
+                  <p><img src="ums_g_an_ms_7a.gif" width="365" height="91"></p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">In a similar way, 
+                    we might have selected the configuration descriptor set to 
+                    display in analysed form. The interface descriptor tells us, 
+                    and the host, that it is a HID class device. The bInterfaceSubClass 
+                    is usually 0 in HID class devices except for a mouse or a 
+                    keyboard which meet the simplified protocol requirements for 
+                    being operated by the BIOS code, before the usual USB drivers 
+                    have been loaded. In this case we notice that the device will 
+                    work with the boot interface and (from bInterfaceProtocol) 
+                    that it is a mouse. The usual HID driver will learn about 
+                    this in another way; by parsing the HID report descriptor.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">We notice that 
+                    this device has a single Interrupt IN endpoint in addition 
+                    to the default control endpoint, and that it is set to be 
+                    interrogated once every 10 ms and expects the host to read 
+                    4 bytes each time. (<a href="ums_ms_desc_conf.htm" target="_blank">Click 
+                    here</a> to see a fuller analysis of the configuration descriptor 
+                    collection in a separate window.)</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">As with any HID 
+                    device the descriptor following the interface descriptor is 
+                    the HID descriptor whose main job is to tell the host where 
+                    to find the HID Report Descriptor. This is the means by which 
+                    the device can specify what it is and the detailed content 
+                    of reports it may send and/or receive.</font></p>
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"><img src="ums_g_an_ms_9.gif" width="334" height="1385"></td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">We have learned 
+                    that when the device has been configured, the host will start 
+                    an IN interrupt (on endpoint 1 IN) to read a report or reports 
+                    up to 4 bytes long at intervals of 10 ms (or possibly less, 
+                    typically it would be 8 ms with Windows).</font></p>
+                  <p><img src="ums_g_mouse_com.gif" width="448" height="260"></p>
+                  <p><font face="Arial, Helvetica, sans-serif">So once the mouse 
+                    is configured, the picture above represents the communication 
+                    channels possible in the mouse. It still has the bi-directional 
+                    control endpoint, and can receive the six HID class requests 
+                    shown in the picture, and it has the interrupt IN endpoint, 
+                    for sending its reports of mouse events. Typically, and in 
+                    our example here, the only class request out of the 6 defined 
+                    HID requests which is used, is the Set Idle request.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">We can now select 
+                    the Get HID Report descriptor to analyse. The display below 
+                    shows the contents and significance of the HID report descriptor, 
+                    which, using a form of coding specified in the HID specification, 
+                    defines one or more reports which are the means of transferring 
+                    information to or from a HID device. The parsed form of the 
+                    report desriptor is shown below. Parsing a HID report is a 
+                    fairly complex operation, so the analyser has helped out by 
+                    displaying the defined reports, or in this case the one report 
+                    defined. It is a single Input report, with 5 buttons, and 
+                    X and Y movement, and a wheel movement, which make up a total 
+                    of 4 bytes to match the maximum size of the interrupt endpoint.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"><img src="ums_g_an_ms_8.gif" width="315" height="865"></td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">To complete the 
+                    picture we now examine the content of one of the interrupt 
+                    transfers (events 4103 to 4105 in the first sequence we looked 
+                    at). The bytes transferred were 00 01 00 00. If we select 
+                    the Interrupt Transfer to analyse we will see how the meaning 
+                    matches up with the parsed report descriptor analysis. </font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%"><img src="ums_g_an_ms_10.gif" width="349" height="345"></td>
+                <td width="1%">&nbsp;</td>
+                <td width="17%">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="2"> 
+                  <p>&nbsp;</p>
+                  <p><font face="Arial, Helvetica, sans-serif">We can tell from 
+                    this that the mouse moved 1 unit in the X direction.</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="1%" height="2">&nbsp;</td>
+                <td width="17%" height="2">&nbsp;</td>
+              </tr>
+              <tr> 
+                <td width="82%" height="2"> 
+                  <h4><font face="Arial, Helvetica, sans-serif">What have we not 
+                    examined?</font></h4>
+                  <p><font face="Arial, Helvetica, sans-serif">We have not seen 
+                    any Keep Alive signals in our displays. There is at least 
+                    one Keep Alive signal every frame, or every 1 ms. This makes 
+                    for a very cluttered display, even when they are grouped together 
+                    by the analyser. So we have set the analyser not to display 
+                    the Keep Alive pulses for the sake of this discussion.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">In the same way, 
+                    the interrupt IN transfers have only been shown when successful. 
+                    Every 8 ms there was an attempt to perform an IN transaction 
+                    by the host, and most of these were NAKed by the device. The 
+                    analyser was set not to shown these NAKed transactions.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Here is a section 
+                    of the capture containing these elements with the analyser 
+                    set to reveal them. In addition, one of the NAKed interrupts 
+                    has been expanded so you can see what it is built up from.</font></p>
+                  <p><img src="ums_g_an_ms_12.gif" width="466" height="550"></p>
+                </td>
+                <td width="1%" height="2">&nbsp;</td>
+                <td width="17%" height="2">&nbsp;</td>
+              </tr>
+            </table>
+            <p>&nbsp;</p>
+          </td>
+        </tr>
+        <tr> 
+          <td width="52%" bgcolor="#FFFFCC" height="105"> 
+            <h2><font face="Arial, Helvetica, sans-serif">Summary</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif">We have examined the 
+              actual transfers involved during enumeration and operation of a 
+              real device, a mouse.</font></p>
+          </td>
+          <td width="4%" height="105">&nbsp;</td>
+          <td width="44%" height="105">&nbsp;</td>
+        </tr>
+        <tr> 
+          <td width="52%" bgcolor="#FFFFCC" height="105"> 
+            <h3><font face="Arial, Helvetica, sans-serif">Coming up...</font></h3>
+            <p><font face="Arial, Helvetica, sans-serif">Next we will look at 
+              High Speed USB which uses a data rate of 480 Mb/s on the same cables 
+              as Full Speed USB.</font></p>
+          </td>
+          <td width="4%" height="105">&nbsp;</td>
+          <td width="44%" height="105"><font face="Arial, Helvetica, sans-serif"><a href="ums_6.htm"><b>Forward</b></a></font></td>
+        </tr>
+        <tr>
+          <td width="48%" bgcolor="#FFFFCC" height="38"> 
+            <div align="right"><font face="Arial, Helvetica, sans-serif" size="-2">Copyright 
+              &copy; 2006-2008 MQP Electronics Ltd</font></div>
+          </td>
+          <td width="4%" height="38">&nbsp;</td>
+          <td width="44%" height="38">&nbsp;</td>
+        </tr>
+        
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<div align="left"></div>
+</body>
+</html>

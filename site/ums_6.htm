@@ -1,0 +1,938 @@
+<html>
+<head>
+<title>USB Made Simple - Part 6</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" href="ums.css" type="text/css">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000" background="g_back1.gif">
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="10%" height="92"><img src="g_wedge1.gif" width="80" height="10"></td>
+    <td width="4%" height="92"><img src="g_wedge2.gif" width="30" height="4"></td>
+    <td width="86%" height="92"> 
+      <h1 align="center"><img src="ums_g_heading.gif" width="600" height="180"></h1>
+    </td>
+  </tr>
+  <tr>
+    <td width="10%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="index.html"><font color="#FFFF00">Index</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_1.htm"><font color="#FFFF00">Part 
+            1</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_2.htm"><font color="#FFFF00">Part 
+            2</font></a></font></td>
+        </tr>
+        <tr> 
+          <td height="21"><font face="Arial, Helvetica, sans-serif"><a href="ums_3.htm"><font color="#FFFF00">Part 
+            3 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_4.htm"><font color="#FFFF00">Part 
+            4 </font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_5.htm"><font color="#FFFF00">Part 
+            5</font></a></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><b><font color="#FFFF00">Part 
+            6 </font></b></font></td>
+        </tr>
+        <tr> 
+          <td><font face="Arial, Helvetica, sans-serif"><a href="ums_7.htm"><font color="#FFFF00">Part 
+            7</font></a></font></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td><a href="ums_links.htm"><font color="#FFFF00" face="Arial, Helvetica, sans-serif">Links</font></a></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="4%">&nbsp;</td>
+    <td width="86%"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr> 
+          <td width="21%"> <font face="Arial, Helvetica, sans-serif"><a href="ums_5.htm"><b>Back</b></a></font></td>
+          <td width="56%"> 
+            <h2 align="center"><font face="Arial, Helvetica, sans-serif">Part 
+              6 - High Speed Basics</font></h2>
+          </td>
+          <td width="23%"> 
+            <div align="right"> <font face="Arial, Helvetica, sans-serif"><a href="ums_7.htm"><b>Forward</b></a></font></div>
+          </td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="185"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td bgcolor="#FFFFCC"> 
+                  <h2><font face="Arial, Helvetica, sans-serif">Introduction to 
+                    High Speed USB</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">As mentioned before, 
+                    the high speed additions to the specification were introduced 
+                    in USB 2.0 as a response to the higher speed of Firewire.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">As High Speed was 
+                    added as an afterthought, and had to maintain compatibilty 
+                    without compromising performance, we have left the description 
+                    of High Speed until we had covered the basics of the original 
+                    specification.</font></p>
+                </td>
+                <td>&nbsp;</td>
+                <td><img src="ums_j_webcam.jpg" width="350" height="299"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="80%" border="0" cellpadding="12" cellspacing="0" align="center">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h5><font face="Arial, Helvetica, sans-serif">Subjects covered 
+                    in this part...</font></h5>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#data_transmission">Data 
+                      Transmission</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#packet_sync">Packet 
+                      Sync</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#end_of_packet">End 
+                      of Packet</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#compatibility">Compatibility</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#negotiating_high_speed">Negotiating 
+                      High Speed</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#frames_and_microframes">Frames 
+                      and Microframes</a></font></li>
+                  </ul>
+                </td>
+                <td width="4%" bgcolor="#FFFFCC">&nbsp;</td>
+                <td width="48%" bgcolor="#FFFFCC" valign="bottom"> 
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#new_packet_identifiers">New 
+                      Packet Identifiers</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#high_speed_hubs">High 
+                      Speed Hubs with Full and Low Speed Devices</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#reset">Reset</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#suspend">Suspend</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#resume">Resume</a></font></li>
+                    <li><font face="Arial, Helvetica, sans-serif"><a href="#detecting_unplug">Detecting 
+                      a Device Unplug</a></font></li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+            <div align="center"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="199" bgcolor="#FFFFCC"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr bgcolor="#FFFFCC"> 
+                <td width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="data_transmission"></a>Data 
+                    Transmission</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">The data rate achieved 
+                    by High Speed is 480 Mb/s. This needs to be transmitted down 
+                    cables which were originally specified for a 12 Mb/s transmission 
+                    rate, </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">To achieve this, 
+                    when the link is conveying high speed data, each end of D+ 
+                    and each end of D- is terminated with a 45 Ohm resistance 
+                    to ground. </font></p>
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="5%">&nbsp;</td>
+                <td width="48%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">Data is sent by 
+                    steering a current of 17.78 mA (derived from the positive 
+                    supply) into either the D+ or the D- line. This results in 
+                    a voltage of 400mV on the line being fed with current. The 
+                    differential state of the line is detected at the receiving 
+                    end by a differential receiver. This arrangement is able to 
+                    reliably receive data sent at 480 Mb/s.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">In fact the 45 
+                    Ohm resistors are provided by the Full Speed / Low Speed driver, 
+                    at each end of the link, applying a Single Ended Zero. The 
+                    FS/LS driver is designed to provide as accurate a termination 
+                    resistance as possible. By switching off the high speed transceiver 
+                    current source, the line conditions are as defined for full 
+                    speed / low speed.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="60%" border="0" align="center">
+              <tr> 
+                <td> 
+                  <h4><font face="Arial, Helvetica, sans-serif">Basics of High 
+                    Speed Transmission</font></h4>
+                  <p><img src="ums_g_hs_data.gif"></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">In addition to 
+                    the differential receiver, there is also a 'transmission envelope 
+                    detector' and a 'differential envelope detector'.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The transmission 
+                    envelope detector produces a 'squelch' signal if there is 
+                    less than 100uV between the data lines, which means that there 
+                    is no data being received.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The differential 
+                    envelope detector detects if the far end has been unplugged, 
+                    as the differential voltage will double to about 800 mV if 
+                    the far end terminating resistors are not present.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif"> (Further down 
+                    the page you will see how this is used by the host to detect 
+                    the unplugging of a high speed device.)</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"> 
+                  <table width="80%" border="1" cellspacing="0" cellpadding="5" bordercolor="#00FF00" align="center">
+                    <tr> 
+                      <td height="150"> 
+                        <h4><font face="Arial, Helvetica, sans-serif" size="-1">Further 
+                          Detail in the Specification</font></h4>
+                        <p><font face="Arial, Helvetica, sans-serif" size="-1">Fig 
+                          7-1 in Chapter 7 of the USB Specification V2.0 shows 
+                          a complete suggested circuit for a low / full / high 
+                          speed transceiver.</font></p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="packet_sync"></a>Packet 
+                    Sync</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">Just prior to the 
+                    packet sync, both data lines are low. The sync is sent using 
+                    the NRZI sequence KJKJKJKJKJKJKJKJ</font><font face="Arial, Helvetica, sans-serif"> 
+                    KJKJKJKJKJKJKJKK.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">A hub may drop 
+                    up to 4 bits from the sync pattern. After 5 hubs the sync 
+                    field of a packet may be only 12 bits long.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"> 
+                  <h4><font face="Arial, Helvetica, sans-serif">High Speed Synchronisation 
+                    Pattern</font></h4>
+                  <p><img src="ums_g_hs_sync.gif"></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="end_of_packet"></a>End 
+                    of Packet</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">On a low or full 
+                    speed link, a brief Single Ended Zero (SE0) state is used 
+                    to indicate End Of Packet (EOP), and idle is indicated by 
+                    a J condition.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">On a high speed 
+                    link, the idle state is effectively a SE0, so that state is 
+                    not available to indicate EOP, and a different method for 
+                    indicating the end of packet is used. During normal data transmission 
+                    there can not be a run of more than 6 1's in a row, because 
+                    a 0 is automatically inserted (and will be removed on reception). 
+                    This guarantees that there will be sufficient transitions 
+                    in the NRZI encoded data stream to allow clock recovery.</font></p>
+                </td>
+                <td width="4%" bgcolor="#FFFFCC">&nbsp;</td>
+                <td width="48%" bgcolor="#FFFFCC"> 
+                  <p><font face="Arial, Helvetica, sans-serif">At high speed, 
+                    the EOP is indicated, by deliberately sending a byte which 
+                    contains a bit-stuffing error; '01111111'. This applies at 
+                    the end of all packets except SOF.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Each high speed 
+                    SOF packet is terminated with 5 NRZI bytes containing bit-stuffing 
+                    errors: 01111111 - 11111111 -11111111 -11111111 -11111111. 
+                    This pattern allows the 'disconnection envelope detector' 
+                    to detect a rise in data amplitude above 625 mV, in the event 
+                    that the device, along with its termination resistors, has 
+                    been unplugged.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="15"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr bgcolor="#FFFFCC"> 
+                <td> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="compatibility"></a>Compatibility</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">Care has been taken 
+                    to provide as much compatibity between high speed and full 
+                    / low speed host, and high speed and full / low speed devices. 
+                    USB is a plug-and-play system and must not confuse the user.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">So a low or full 
+                    speed device will always work with a high speed capable host. 
+                    </font></p>
+                </td>
+                <td>&nbsp;</td>
+                <td valign="middle"><font face="Arial, Helvetica, sans-serif">A 
+                  high speed device will always work with a full / low speed host, 
+                  at least to the extent of communicating its identity and capabilities 
+                  to the host (which it can do at full speed). The host will then 
+                  be in a position to report to the user if they have a device 
+                  which relies on high speed bandwidth to provide any functionality.</font></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="15"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" bgcolor="#FFFFCC"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td width="48%" valign="top"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="negotiating_high_speed"></a>Negotiating 
+                    High Speed</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">To maintain the 
+                    required compatibility, a high speed device will always present 
+                    itself initially as a Full Speed device (by a 1.5K pullup 
+                    resistor on D+).</font></p>
+                  <p>&nbsp;</p>
+                </td>
+                <td width="6%">&nbsp;</td>
+                <td width="48%"> 
+                  <p><font face="Arial, Helvetica, sans-serif">The negotiation 
+                    for High Speed takes place during the Reset, which is, as 
+                    we remember, the first thing a host must do to a device before 
+                    attempting data communication.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The high speed 
+                    detection handshake is initiated by the device.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The hub will respond 
+                    to it, if it is high speed capable.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <div align="center"><img src="ums_g_hs_handshake.gif"></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" bgcolor="#FFFFCC"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td width="48%" valign="top"> 
+                  <h3><font face="Arial, Helvetica, sans-serif">What the device 
+                    does</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">The device leaves 
+                    its D+ 1.5K pullup resistor connected, and does <i>not</i> 
+                    terminate the lines with 45 Ohm resistors as it would for 
+                    high speed. But it drives high speed current (17.78mA) into 
+                    the D- line for at least a millisecond. Now, remember that 
+                    the hub is applying a reset condition to the lines, so effectively 
+                    is already terminated as for high speed data. As only one 
+                    end of the link is terminated, the hub will see about 800 
+                    mV on D-. This condition is called a K-chirp.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">A full / low speed 
+                    hub will pay no attention to this condition, but a high speed 
+                    hub will detect it using its differential receiver and the 
+                    absence of a squelch signal. </font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">If the hub does 
+                    not respond, then the rest of the reset, and subsequent data 
+                    transmissions will take place as is normal for a full speed 
+                    device.</font></p>
+                </td>
+                <td width="5%">&nbsp;</td>
+                <td width="48%"> 
+                  <h3><font face="Arial, Helvetica, sans-serif">Hub Response</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">If the hub is high 
+                    speed capable then it will monitor the K-chirp from the device 
+                    until it sees it completing. It must, within 100us, send a 
+                    series of K-J chirp pairs to the device. This means that it 
+                    will inject 17.78 mA alternately into the D- and the D+ lines. 
+                    Each of these chirps lasts around 50us, and there are no gaps 
+                    between them. The device has to see at least 3 chirp pairs 
+                    before assuming that the hub is high speed capable.</font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Switching to High 
+                    Speed</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">At this point the 
+                    device disconnects its 1.5K pullup resistor, applies the 45 
+                    Ohm high speed terminations (using its full speed data driver 
+                    in SE0 mode), and is thus in a state to perform high speed 
+                    data transmission and reception. The hub will continue to 
+                    send chirp pairs up until 100 - 500 us before the end of reset, 
+                    and the device will monitor these chirps. At the point in 
+                    time when the device termination is applied, the amplitude 
+                    of the chirp signals, viewed on an oscilloscope would be seen 
+                    to halve in amplitude from 800mV to 400mV.</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="350"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="12">
+              <tr> 
+                <td bgcolor="#FFFFCC"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="frames_and_microframes"></a>Frames 
+                    and Microframes</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">The 1 ms frame 
+                    rate in full speed / low speed USB, is used for a number of 
+                    purposes, such as scheduling access to the bus, and as a timing 
+                    reference for interrupt and isochronous transfers.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">For high speed, 
+                    a higher frame rate was deemed appropriate, while still maintaining 
+                    a relationship with the existing 1 kHz rate.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">To this end, high 
+                    speed uses the 'Microframe' which is 125us long (8 Microframes 
+                    per millisecond). The correspondence with the 1ms frame numbering 
+                    is maintained in the high speed SOF packets by repeating each 
+                    frame number in 8 successive Microframes. </font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Packet Length</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">The maximum length 
+                    of packets was increased for high speed, see table to right.</font></p>
+                  <h3><font face="Arial, Helvetica, sans-serif">Packets per (Micro)frame</font></h3>
+                  <p><font face="Arial, Helvetica, sans-serif">At high speed it 
+                    is possible to specify up to 3 isochronous or interrupt transfers 
+                    per microframe, rather than the 1 transfer per frame of full 
+                    speed; giving a maximum possible isochronous or interrupt 
+                    transfer rate of 192 Mb/s.</font></p>
+                </td>
+                <td>&nbsp;</td>
+                <td> 
+                  <p><img src="ums_g_hs_frames.gif" width="331" height="327"></p>
+                  <p>&nbsp;</p>
+                  <table width="90%" border="1" cellspacing="0" bordercolor="#000000">
+                    <tr bgcolor="#0000FF"> 
+                      <td rowspan="2" width="25%"> 
+                        <div align="center"><font color="#FFFFFF" face="Arial, Helvetica, sans-serif" size="-1"><b>Transfer 
+                          Type</b></font></div>
+                      </td>
+                      <td colspan="3"> 
+                        <div align="center"><font color="#FFFFFF" face="Arial, Helvetica, sans-serif" size="-1"><b>Max 
+                          Packet Size</b></font></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="22%" bgcolor="#0000FF"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1"><b><font color="#FFFFFF">LS</font></b></font></div>
+                      </td>
+                      <td width="24%" bgcolor="#0000FF"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1"><b><font color="#FFFFFF">FS</font></b></font></div>
+                      </td>
+                      <td width="29%" bgcolor="#0000FF"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1"><b><font color="#FFFFFF">HS</font></b></font></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="-1">Control</font></td>
+                      <td width="22%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8</font></div>
+                      </td>
+                      <td width="24%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8, 
+                          16, 32, 64</font></div>
+                      </td>
+                      <td width="29%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">64</font></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="-1">Bulk</font></td>
+                      <td width="22%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">-</font></div>
+                      </td>
+                      <td width="24%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">8, 
+                          16, 32, 64</font></div>
+                      </td>
+                      <td width="29%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">512</font></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="-1">Interrupt</font></td>
+                      <td width="22%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">up 
+                          to 8</font></div>
+                      </td>
+                      <td width="24%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">up 
+                          to 64</font></div>
+                      </td>
+                      <td width="29%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">up 
+                          to 1024</font></div>
+                      </td>
+                    </tr>
+                    <tr> 
+                      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="-1">Isochronous</font></td>
+                      <td width="22%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">-</font></div>
+                      </td>
+                      <td width="24%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">up 
+                          to 1023</font></div>
+                      </td>
+                      <td width="29%"> 
+                        <div align="center"><font face="Arial, Helvetica, sans-serif" size="-1">up 
+                          to1024</font></div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="32"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td width="48%" bgcolor="#FFFFCC"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="new_packet_identifiers"></a>New 
+                    Packet Identifiers</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">Some new PIDs were 
+                    added for high speed, partly to overcome some inefficiencies 
+                    which were recognised in the full speed protocol, and partly 
+                    to support new isochronous transfer features, and the new 
+                    requirement for 'split transactions' (more about this below).</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">The identifiers 
+                    which are designed to overcome some inefficiencies and improve 
+                    bandwidth usage at high speed are:</font></p>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif">NYET</font></li>
+                    <li><font face="Arial, Helvetica, sans-serif">PING</font></li>
+                  </ul>
+                  <p><font face="Arial, Helvetica, sans-serif">Identifiers which 
+                    allow for control over multiple isochronous packets per microframe 
+                    are:</font></p>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif">DATA2</font></li>
+                    <li><font face="Arial, Helvetica, sans-serif">MDATA</font></li>
+                  </ul>
+                  <p><font face="Arial, Helvetica, sans-serif">The identifiers 
+                    added to assist with split transfers are:</font></p>
+                  <p></p>
+                  <p></p>
+                  <p></p>
+                  <ul>
+                    <li><font face="Arial, Helvetica, sans-serif">SPLIT</font></li>
+                    <li><font face="Arial, Helvetica, sans-serif">ERR</font></li>
+                  </ul>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"> 
+                  <table width="80%" border="1" cellspacing="0" cellpadding="2" bordercolor="#0000FF" align="center">
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID 
+                        Type</font></b></font></td>
+                      <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID 
+                        Name</font></b></font></td>
+                      <td><font face="Arial, Helvetica, sans-serif"><b><font size="-1">PID&lt;3:0&gt;*</font></b></font></td>
+                    </tr>
+                    <tr> 
+                      <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Token</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">OUT</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">0001b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">IN</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1001b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">SOF</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">0101b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">SETUP</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1101b</font></td>
+                    </tr>
+                    <tr> 
+                      <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Data</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">DATA0</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">0011b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">DATA1</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1011b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">DATA2</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">0111b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">MDATA</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">1111b</font></td>
+                    </tr>
+                    <tr> 
+                      <td rowspan="4"><font face="Arial, Helvetica, sans-serif" size="-1">Handshake</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">ACK</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">0010b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">NAK</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1010b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">STALL</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1110b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">NYET</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">0110b</font></td>
+                    </tr>
+                    <tr> 
+                      <td rowspan="5"><font face="Arial, Helvetica, sans-serif" size="-1">Special</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">PRE</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">1100b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">ERR</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">1100b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1">SPLIT</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1">1000b</font></td>
+                    </tr>
+                    <tr> 
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">PING</font></td>
+                      <td bgcolor="#FFFF99"><font face="Arial, Helvetica, sans-serif" size="-1" color="#000000">0100b</font></td>
+                    </tr>
+                    <tr> 
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">Reserved</font></td>
+                      <td><font face="Arial, Helvetica, sans-serif" size="-1">0000b</font></td>
+                    </tr>
+                  </table>
+                  <div align="center"></div>
+                  <p align="center"><font face="Arial, Helvetica, sans-serif">* 
+                    Bits are transmitted lsb first</font></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" bgcolor="#FFFFCC"> 
+            <div align="center"> 
+              <table width="100%" border="0" cellspacing="0" cellpadding="12">
+                <tr bgcolor="#FFFFCC"> 
+                  <td width="48%"> 
+                    <h2><font face="Arial, Helvetica, sans-serif"><a name="high_speed_hubs"></a>High 
+                      Speed Hubs with Full and Low Speed Devices</font></h2>
+                    <p><font face="Arial, Helvetica, sans-serif">In the original 
+                      USB, there was a built-in inefficiency, in that the whole 
+                      bus was held up, waiting for low speed transactions to take 
+                      place.</font></p>
+                    <p><font face="Arial, Helvetica, sans-serif">Having gone to 
+                      the trouble of increasing the data rate to 480 Mb/s, it 
+                      would have been wasteful if this situation was perpetuated, 
+                      so a different approach was taken.</font></p>
+                    <p><font face="Arial, Helvetica, sans-serif">All communication 
+                      to a USB V2.00 hub takes place at high speed, even when 
+                      it contains traffic for low or full speed devices. In a 
+                      tree of high speed hubs the packets are tranferred down 
+                      the tree at high speed as far as the hub, to whose port 
+                      a low or full speed device is connected.</font></p>
+                    <p>&nbsp;</p>
+                  </td>
+                  <td width="4%">&nbsp;</td>
+                  <td width="48%"> 
+                    <p><font face="Arial, Helvetica, sans-serif">The hub in question 
+                      assigns special control circuitry within itself, to take 
+                      over the role of communicating with the low or full speed 
+                      segment of the bus; initiating the transactions, getting 
+                      the response back from the device, and finally communicating 
+                      the result back to the host at high speed.</font></p>
+                    <p><font face="Arial, Helvetica, sans-serif">The mechanism 
+                      needed to deal with this, without holding up the high speed 
+                      segments of the bus, involves splitting every low or full 
+                      speed transaction into 2 stages; the request from the host, 
+                      and the eventual response from the device.</font></p>
+                    <p><font face="Arial, Helvetica, sans-serif">The host communicates 
+                      its requirements with the high speed hub using a new packet 
+                      with a SPLIT identifier. This packet can define a Start 
+                      Split, or a Complete Split transaction.</font></p>
+                    <p><font face="Arial, Helvetica, sans-serif">The actual sequence 
+                      of packets in these two types of transaction is very dependent 
+                      on the transfer type and direction.</font></p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="705"> 
+            <div align="center"> 
+              <table width="50%" border="0" align="center">
+                <tr> 
+                  <td> 
+                    <p><i>This diagram illustrates how full speed and low speed 
+                      traffic is kept separate from high speed traffic. The blue 
+                      lines carry only high speed traffic, and the red lines only 
+                      full or low speed. Any traffic directed at full or load 
+                      speed devices passes through the high speed section, as 
+                      high speed split transactions.</i> </p>
+                    <p align="center"><img src="ums_g_hs_pyra.gif"> </p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="2"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="reset"></a>Reset</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">The host will maintain 
+                    its SE0, but not send any data, when it wants to Reset the 
+                    device. The device will initially see a SE0 (with no data 
+                    activity) and will not be able to distinguish this condition 
+                    from a Suspend. After, at the latest, 3.125 ms of this condition 
+                    the device must revert to full speed termination itself, and 
+                    then test whether it sees SE0 or Idle. If it sees SE0 then 
+                    it knows it is being reset, and will procede with the chirp 
+                    handshake described above.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"><img src="ums_g_hs_reset.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td width="48%" bgcolor="#FFFFCC"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="suspend"></a>Suspend</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">A high speed host 
+                    suspends a device by reverting to a Full Speed idle state. 
+                    Again the device will initially see a SE0 (with no data activity) 
+                    and will not be able to distinguish this condition from a 
+                    Reset.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">After, at the latest, 
+                    3.125 ms of this condition the device must revert to Full 
+                    Speed termination itself, and then test whether it sees SE0 
+                    or Idle. If it detects idle it must assume that it it being 
+                    suspended, and must go to its lower power suspended mode.</font></p>
+                  <p><font face="Arial, Helvetica, sans-serif">Note that both 
+                    ends of the link must remember that they were in high speed 
+                    mode, so that when Resume takes place, no high speed handshake 
+                    is required.</font><font face="Arial, Helvetica, sans-serif"> 
+                    </font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%" bgcolor="#FFFFFF"> 
+                  <div align="center"><img src="ums_g_hs_suspend.gif" width="430" height="335"></div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="resume"></a>Resume</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">As for full / low 
+                    speed, the Resume is signalled by a K state for 20 ms. When 
+                    the link was previously in high speed mode, the resume is 
+                    completed by a transition back to SE0 at the end of the resume, 
+                    and both host and device must be in high speed terminated 
+                    mode within 2 low speed bit times.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"><img src="ums_g_hs_resume.gif" width="430" height="239"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif"><a name="detecting_unplug"></a>Detecting 
+                    a Device Unplug</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">See the description 
+                    of the <a href="#end_of_packet">EOP signal</a> above.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="3"> 
+            <hr noshade size="1">
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif">Summary</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">We have looked 
+                    at the nuts and bolts of High Speed USB to see how a 480 Mb/s 
+                    bit rate can be achieved in the same system designed originally 
+                    to support Full Speed and Low Speed USB.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2><font face="Arial, Helvetica, sans-serif">Coming up...</font></h2>
+                  <p><font face="Arial, Helvetica, sans-serif">Next we will examine 
+                    the contents of the new packets and how they are used in the 
+                    various data transfer types. We will also see how the bus 
+                    can support three such different data rates without compromising 
+                    bus performance at High Speed.</font></p>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%"><font face="Arial, Helvetica, sans-serif"><a href="ums_7.htm"><b>Forward</b></a></font></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="3" height="3"> 
+            <table width="100%" border="0" cellpadding="12" cellspacing="0">
+              <tr> 
+                <td bgcolor="#FFFFCC" width="48%"> 
+                  <h2 align="right"><font face="Arial, Helvetica, sans-serif" size="-2">Copyright 
+                    &copy; 2006-2008 MQP Electronics Ltd</font></h2>
+                </td>
+                <td width="4%">&nbsp;</td>
+                <td width="48%">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        
+      </table>
+    </td>
+  </tr>
+</table>
+<div align="left"></div>
+</body>
+</html>

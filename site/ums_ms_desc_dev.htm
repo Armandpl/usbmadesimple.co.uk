@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>Mouse Descriptor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<style>html{background:#fff}body{max-width:1024px;margin:0 auto}</style></head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td width="48%"> 
+      <table width="90%" border="0" cellspacing="0" cellpadding="5" align="center">
+        <tr>
+          <td>
+            <h2><font face="Arial, Helvetica, sans-serif" size="-1">Device Descriptor</font></h2>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">This is the 
+              device descriptor of the mouse we are examining. The analyser is 
+              showing the significance of the 18 bytes which comprise the descriptor.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The device 
+              descriptor is the top level set of information which can be read 
+              from a device. It is the first item which the host will attempt 
+              to retrieve.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The first two 
+              bytes show the length and descriptor type, as with any descriptor. 
+              This is followed by a word which says the device conforms to USB 
+              specification V1.1.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The next three 
+              bytes describe the device class. In the case of a mouse which is 
+              a Human Interface Device class, the class is not defined here, but 
+              defined for each interface in the device in the interface descriptor(s). 
+              (We will see that our mouse has one interface.)</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">bMaxPacketSize0 
+              specifies that the maximum input and output packet size for endpoint 
+              0 is 8 bytes.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The next three 
+              words specify the exact identification of the device. We can see 
+              who made it, what it is, and which version it is.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">The next three 
+              items define indexes to strings which the device may or may not 
+              specify. This device has a manufacturer string (which the host never 
+              asked for, so we don't know what it is), a product string (shown 
+              here because the analyser noted what it contains when it was asked 
+              for later), but no serial number string. </font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">A mouse does 
+              not usually have a serial number.</font></p>
+            <p><font face="Arial, Helvetica, sans-serif" size="-1">Finally we 
+              are told that this device has just 1 configuration, which in practice 
+              is the most common number of configurations for a device to have.</font></p>
+    </td>
+        </tr>
+      </table>
+      
+    </td>
+    <td width="52%"> 
+      <h2><font face="Arial, Helvetica, sans-serif"><img src="ums_g_an_ms_7s.gif" width="355" height="419"></font></h2>
+      </td>
+  </tr>
+  <tr>
+    <td width="48%">
+      <p>&nbsp;</p>
+      </td>
+    <td width="52%"> 
+      <p>&nbsp;</p>
+      </td>
+  </tr>
+</table>
+</body>
+</html>
