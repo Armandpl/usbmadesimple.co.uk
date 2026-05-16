@@ -202,6 +202,9 @@ def fetch(cutoff: str) -> None:
         time.sleep(SLEEP_SECONDS)
     with open(os.path.join(OUT_DIR, "_manifest.json"), "w") as f:
         json.dump(manifest, f, indent=2)
+    # GitHub Pages applies Jekyll by default, which drops files/dirs starting
+    # with an underscore (e.g. _manifest.json). The marker disables that.
+    open(os.path.join(OUT_DIR, ".nojekyll"), "w").close()
     sys.stderr.write(f"done. {len(manifest)} files in {OUT_DIR}\n")
 
 
